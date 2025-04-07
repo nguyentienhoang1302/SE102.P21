@@ -1,0 +1,14 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#topleft
+51000	222	222	237	237	30
+#topmiddle
+52000	239	222	254	237	30
+#topright
+53000	256	222	271	237	30
+#bottomleft
+54000	426	273	441	288	30
+#bottommiddle
+55000	443	273	458	288	30
+#bottomright
+56000	460	273	475	288	30
