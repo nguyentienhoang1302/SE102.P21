@@ -11,10 +11,14 @@
 #define COIN_BBOX_HEIGHT 16
 
 class CCoin : public CGameObject {
+protected:
+	bool setAppear = false;
+	ULONGLONG timer;
+	int isFromBox;
 public:
-	CCoin(float x, float y) : CGameObject(x, y) {}
+	CCoin(float x, float y, int isFromBox) { this->isFromBox = isFromBox; }
 	void Render();
-	void Update(DWORD dt) {}
+	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	int IsBlocking() { return 0; }
 };

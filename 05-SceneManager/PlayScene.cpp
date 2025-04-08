@@ -13,6 +13,7 @@
 #include "Cloud.h"
 #include "ColorBlock.h"
 #include "Pipe.h"
+#include "MysteryBlock.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -122,7 +123,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
+	case OBJECT_TYPE_COIN: obj = new CCoin(x, y, 0); break;
 
 	case OBJECT_TYPE_TREE:
 	{
@@ -168,6 +169,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int aniId = (int)atoi(tokens[3].c_str());
 		obj = new CPipe(x, y, aniId);
+		break;
+	}
+
+	case OBJECT_TYPE_MBLOCK:
+	{
+		int content = (int)atoi(tokens[4].c_str());
+		int aniId = (int)atoi(tokens[3].c_str());
+		obj = new CMBlock(x, y, aniId, content);
 		break;
 	}
 
@@ -274,9 +283,22 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	for (size_t i = 0; i < objects.size(); i++)
+	//for (size_t i = 0; i < objects.size(); i++)
+	//{
+	//	objects[i]->Update(dt, &coObjects);
+	//}
+	size_t i = 0;
+	while (i < objects.size())
 	{
 		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->CreateSubObject) {
+			CGameObject* obj = NULL;
+			obj = objects[i]->subObject;
+			objects.push_back(obj);
+			Render();
+			objects[i]->CreateSubObject = false;
+		}
+		i++;
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
