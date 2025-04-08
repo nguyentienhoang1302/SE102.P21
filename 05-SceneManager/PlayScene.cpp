@@ -12,6 +12,7 @@
 #include "Tree.h"
 #include "Cloud.h"
 #include "ColorBlock.h"
+#include "Pipe.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -160,6 +161,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		int aniId = (int)atoi(tokens[3].c_str());
 		obj = new CColorBlock(x, y, aniId);
+		break;
+	}
+
+	case OBJECT_TYPE_PIPE:
+	{
+		int aniId = (int)atoi(tokens[3].c_str());
+		obj = new CPipe(x, y, aniId);
 		break;
 	}
 
