@@ -57,6 +57,9 @@ void CMBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		subObject = new CCoin(x, y, 1);
 		subObject->SetPosition(x, y - 16);
 	}
+	else if (content == 2) {
+		subObject = new CMushroom(x, y, 1);
+	}
 
 	if (state == MBLOCK_STATE_EMPTY) {
 		y += vy * dt;

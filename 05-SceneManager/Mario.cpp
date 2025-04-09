@@ -8,6 +8,7 @@
 #include "Coin.h"
 #include "Portal.h"
 #include "MysteryBlock.h"
+#include "Mushroom.h"
 
 #include "Collision.h"
 
@@ -56,6 +57,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CMBlock*>(e->obj))
 		OnCollisionWithMBlock(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -112,6 +115,19 @@ void CMario::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 		coin++;
 	}
 }
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	e->obj->Delete();
+	if (level == MARIO_LEVEL_SMALL)
+	{
+		StartUntouchable();
+		y -= 8;
+		level = MARIO_LEVEL_BIG;
+		StartUntouchable();
+	}
+}
+
 
 //
 // Get animation ID for small Mario

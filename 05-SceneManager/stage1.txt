@@ -9,6 +9,7 @@ ground.txt
 colorblock.txt
 pipe.txt
 mysteryblock.txt
+mushroom.txt
 
 #
 [OBJECTS]
@@ -461,7 +462,7 @@ mysteryblock.txt
 10	176	130	101000	1
 10	192	130	101000	1
 10	224	82	101000	1
-10	240	82	101000	1
+10	240	82	101000	2
 10	416	98	101000	1
 10	654	162	101000	1
 10	702	130	101000	1
