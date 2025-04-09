@@ -72,6 +72,9 @@ public:
 	// Does this object collide with other object at certain direction ( like ColorBox )
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; }
 
+	// This is for making sure that this object can render in front of another object
+	virtual int RenderPriority() { return 0; };
+
 	~CGameObject();
 
 	static bool IsDeleted(const LPGAMEOBJECT &o) { return o->isDeleted; }

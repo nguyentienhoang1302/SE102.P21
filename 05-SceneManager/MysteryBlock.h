@@ -29,8 +29,6 @@ protected:
 
 	ULONGLONG empty_start;
 
-	virtual int RenderPriority() { return 1; };
-
 public:
 	CMBlock(float x, float y, int aniID, int content);
 	//content: 1-coin, 2-mushroom, 3-leaf, 4-greenmushroom
@@ -41,4 +39,5 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	int getContent();
+	virtual int RenderPriority() { return 2; }
 };

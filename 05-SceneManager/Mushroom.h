@@ -35,4 +35,5 @@ protected:
 public:
 	CMushroom(float x, float y, int type); //1 - Red, 2 - Green
 	int GetType() { return type; }
+	virtual int RenderPriority() { return 1; }
 };
