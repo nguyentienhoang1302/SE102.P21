@@ -15,6 +15,8 @@
 #include "Pipe.h"
 #include "MysteryBlock.h"
 #include "DarkZone.h"
+#include "PiranhaPlant.h"
+#include "Fireball.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -197,7 +199,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, length, height,
 			sprite_begin, sprite_middle, sprite_end
 		);
+		break;
+	}
 
+	case OBJECT_TYPE_PIRANHAPLANT:
+	{
+		int type = (int)atoi(tokens[3].c_str());
+		obj = new CPPlant(x, y, type);
+		break;
+	}
+
+	case OBJECT_TYPE_FIREBALL:
+	{
+		int direction = (int)atoi(tokens[3].c_str());
+		obj = new CFireball(x, y, direction);
 		break;
 	}
 

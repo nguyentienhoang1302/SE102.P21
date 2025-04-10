@@ -155,6 +155,7 @@
     <ClCompile Include="ColorBlock.cpp" />
     <ClCompile Include="DarkZone.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="MysteryBlock.cpp" />
     <ClCompile Include="Pipe.cpp" />
+    <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -185,6 +187,7 @@
     <ClInclude Include="ColorBlock.h" />
     <ClInclude Include="DarkZone.h" />
     <ClInclude Include="debug.h" />
+    <ClInclude Include="Fireball.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="MysteryBlock.h" />
     <ClInclude Include="Pipe.h" />
+    <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />

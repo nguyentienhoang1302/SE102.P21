@@ -6,7 +6,6 @@
 #include "Coin.h"
 #include "Mushroom.h"
 
-#define ID_SPRITE_MBLOCK 100000
 #define ID_ANI_MBLOCK 101000
 #define ID_ANI_MBLOCK_EMPTY 102000
 

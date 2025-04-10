@@ -3,8 +3,9 @@
 #include "GameObject.h"
 #include "Animation.h"
 #include "Animations.h"
-#include "AssetIDs.h"
 
+#define ID_ANI_MUSHROOM_RED 110000
+#define ID_ANI_MUSHROOM_GREEN 111000
 #define MUSHROOM_GRAVITY 0.001f
 #define MUSHROOM_WALKING_SPEED 0.06f
 

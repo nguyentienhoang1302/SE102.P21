@@ -13,6 +13,7 @@ protected:
 	LPCWSTR sceneFilePath;
 
 public: 
+	float xMario, yMario;
 	CScene(int id, LPCWSTR filePath)
 	{
 		this->id = id;
