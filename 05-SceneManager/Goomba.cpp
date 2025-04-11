@@ -97,6 +97,16 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		SetState(PARAGOOMBA_STATE_WALK);
 	}
+	if (this->GetState() == PARAGOOMBA_STATE_WALK || this->GetState() == PARAGOOMBA_STATE_LOWJUMP || this->GetState() == PARAGOOMBA_STATE_JUMP)
+	{
+		float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+		if (x1 < x && vx > 0) {
+			vx = -vx;
+		}
+		else if (x1 > x && vx < 0) {
+			vx = -vx;
+		}
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
