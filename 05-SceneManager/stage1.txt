@@ -13,6 +13,7 @@ mushroom.txt
 darkzone.txt
 fireball.txt
 piranhaplant.txt
+goomba.txt
 
 #
 [OBJECTS]
@@ -497,16 +498,20 @@ piranhaplant.txt
 10	1472	146	101000	1
 10	1440	-94	101000	1
 
-#Darkzone2480
+#Darkzone
 12	2480	178	16	16	21	26	121000	122000	123000
 
-#PIRANHA PLANT
+#Piranha Plant
 13	360	146	2
 13	1864	146	1
 13	1800	162	3
+
+#Goomba
+2	240	174	2
 
 #4testing
 14	100	100	3
 14	100	120	3
 14	100	140	3
+
 
