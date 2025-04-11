@@ -38,5 +38,5 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	int getContent();
-	virtual int RenderPriority() { return 2; }
+	int RenderPriority() { return 2; }
 };

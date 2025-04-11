@@ -22,12 +22,12 @@
 #define PARAGOOMBA_STATE_LOWJUMP 500
 #define GOOMBA_STATE_WAITING 000
 
+#define ID_ANI_GOOMBA_WAITING 20000
 #define ID_ANI_GOOMBA_WALKING 21000
 #define ID_ANI_GOOMBA_DIE 22000
-#define ID_ANI_GOOMBA_WAITING 20000;
-#define ID_ANI_PARAGOOMBA_WALK 23000
-#define ID_ANI_PARAGOOMBA_JUMP 24000
-#define ID_ANI_PARAGOOMBA 25000
+#define ID_ANI_PARAGOOMBA 23000
+#define ID_ANI_PARAGOOMBA_WINGLESS_WALK 24000
+#define ID_ANI_PARAGOOMBA_WINGLESS_DIE 25000
 
 class CGoomba : public CGameObject
 {
@@ -36,6 +36,7 @@ protected:
 	float ay;
 	int type;
 	int lowjumpcount;
+	bool wingless = false;
 
 	ULONGLONG die_start;
 	ULONGLONG walk_start;
@@ -53,5 +54,6 @@ protected:
 public: 	
 	CGoomba(float x, float y, int type); //1 - Goomba, 2 - Paragoomba
 	virtual void SetState(int state);
-	virtual int RenderPriority() { return 2; }
+	int RenderPriority() { return 2; }
+	void ParagoombaGetHit(); //Set Goomba direction after Paragoomba turn into Goomba	
 };

@@ -78,7 +78,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	if (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_WALK || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_JUMP) || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_LOWJUMP))
 	{
 		{
-			goomba->SetState(GOOMBA_STATE_WALKING);
+			goomba->ParagoombaGetHit();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}

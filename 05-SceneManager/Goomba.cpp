@@ -118,25 +118,30 @@ void CGoomba::Render()
 	int aniId = -1;
 	if (state == PARAGOOMBA_STATE_WALK)
 	{
-		//aniId = ID_ANI_PARAGOOMBA_WALK;
 		aniId = ID_ANI_PARAGOOMBA;
 	}
-	else if (state == GOOMBA_STATE_WALKING)
+	else if (state == GOOMBA_STATE_WALKING && wingless == false)
 	{
 		aniId = ID_ANI_GOOMBA_WALKING;
 	}
-	else if (state == GOOMBA_STATE_DIE)
+	else if (state == GOOMBA_STATE_DIE && wingless == false)
 	{
 		aniId = ID_ANI_GOOMBA_DIE;
 	}
+	else if (state == GOOMBA_STATE_WALKING && wingless == true)
+	{
+		aniId = ID_ANI_PARAGOOMBA_WINGLESS_WALK;
+	}
+	else if (state == GOOMBA_STATE_DIE && wingless == true)
+	{
+		aniId = ID_ANI_PARAGOOMBA_WINGLESS_DIE;
+	}
 	else if (state == PARAGOOMBA_STATE_JUMP)
 	{
-		//aniId = ID_ANI_PARAGOOMBA_JUMP;
 		aniId = ID_ANI_PARAGOOMBA;
 	}
 	else if (state == PARAGOOMBA_STATE_LOWJUMP)
 	{
-		//aniId = ID_ANI_PARAGOOMBA_JUMP;
 		aniId = ID_ANI_PARAGOOMBA;
 	}
 	else if (state == GOOMBA_STATE_WAITING)
@@ -177,4 +182,17 @@ void CGoomba::SetState(int state)
 			vx = 0;
 			break;
 	}
+}
+
+void CGoomba::ParagoombaGetHit()
+{
+	SetState(GOOMBA_STATE_WALKING);
+	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+	if (x1 < x && vx > 0) {
+		vx = -vx;
+	}
+	else if (x1 > x && vx < 0) {
+		vx = -vx;
+	}
+	wingless = true;
 }
