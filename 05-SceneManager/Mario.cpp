@@ -12,6 +12,7 @@
 #include "PiranhaPlant.h"
 #include "Fireball.h"
 #include "Brick.h"
+#include "Koopa.h"
 
 #include "Collision.h"
 
@@ -71,6 +72,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFireball(e);
 	else if (dynamic_cast<CBrick*>(e->obj))
 		OnCollisionWithBrick(e);
+	else if (dynamic_cast<CKoopa*>(e->obj))
+		OnCollisionWithKoopa(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -140,7 +143,6 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	e->obj->Delete();
 	if (level == MARIO_LEVEL_SMALL)
 	{
-		StartUntouchable();
 		y -= 8;
 		level = MARIO_LEVEL_BIG;
 		StartUntouchable();
@@ -149,29 +151,35 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithPPlant(LPCOLLISIONEVENT e)
 {
-	if (level > MARIO_LEVEL_SMALL)
+	if (untouchable == 0)
 	{
-		level = MARIO_LEVEL_SMALL;
-		StartUntouchable();
-	}
-	else
-	{
-		DebugOut(L">>> Mario DIE >>> \n");
-		SetState(MARIO_STATE_DIE);
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
 	}
 }
 
 void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {
-	if (level > MARIO_LEVEL_SMALL)
+	if (untouchable == 0)
 	{
-		level = MARIO_LEVEL_SMALL;
-		StartUntouchable();
-	}
-	else
-	{
-		DebugOut(L">>> Mario DIE >>> \n");
-		SetState(MARIO_STATE_DIE);
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
 	}
 }
 
@@ -185,6 +193,109 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
+{
+	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+
+	if ((e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_WALK) || (e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_JUMP))
+	{
+		koopa->SetState(KOOPA_STATE_WALK);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_WALK)
+	{
+		koopa->SetState(KOOPA_STATE_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK)
+	{
+		koopa->SetState(KOOPA_STATE_RED_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK2)
+	{
+		koopa->SetState(KOOPA_STATE_RED_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+
+	else if (koopa->GetState() == KOOPA_STATE_SHELL)
+	{
+		if (e->ny < 0)
+		{
+			koopa->SetState(KOOPA_STATE_SPIN);
+
+			float x0, y0;
+			koopa->GetPosition(x0, y0);
+			if (x < x0) // if mario is to the right of the shell, shell spins left
+			{
+				koopa->SpinLeft();
+			}
+			else if (x >= x0) // if mario is to the left of the shell, shell spins right
+			{
+				koopa->SpinRight();
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (e->nx < 0)
+		{
+			koopa->SetState(KOOPA_STATE_SPIN);
+			koopa->SpinLeft();
+		}
+		else
+		{
+			koopa->SetState(KOOPA_STATE_SPIN);
+			koopa->SpinRight();
+		}
+	}
+	else if (koopa->GetState() == KOOPA_STATE_RED_SHELL)
+	{
+		if (e->ny < 0)
+		{
+			koopa->SetState(KOOPA_STATE_RED_SPIN);
+
+			float x0, y0;
+			koopa->GetPosition(x0, y0); 
+			if (x < x0) // if mario is to the right of the shell, shell spins left
+			{
+				koopa->SpinLeft();
+			}
+			else if (x >= x0) // if mario is to the left of the shell, shell spins right
+			{
+				koopa->SpinRight();
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (e->nx < 0) 
+		{
+			koopa->SetState(KOOPA_STATE_RED_SPIN);
+			koopa->SpinLeft();
+		}
+		else 
+		{
+			koopa->SetState(KOOPA_STATE_RED_SPIN);
+			koopa->SpinRight();
+		}
+	}
+	else
+	{
+		if (untouchable == 0)
+		{
+			if (koopa->GetState() != KOOPA_STATE_SHELL)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+}
 
 //
 // Get animation ID for small Mario

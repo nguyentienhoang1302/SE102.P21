@@ -21,3 +21,12 @@ int CColorBlock::IsDirectionColliable(float nx, float ny)
 		if (nx == 0 && ny == -1) return 1;
 	else return 0;
 }
+
+int CColorBlock::IsBlocking()
+{
+	if (this->aniID == 81001 || this->aniID == 81002 || this->aniID == 81003 || this->aniID == 82001 || this->aniID == 82002 || this->aniID == 82003 || this->aniID == 83001 || this->aniID == 83002 || this->aniID == 83003 || this->aniID == 84001 || this->aniID == 84002 || this->aniID == 84003)
+	{
+		return 1;
+	}
+	return 0;
+}
