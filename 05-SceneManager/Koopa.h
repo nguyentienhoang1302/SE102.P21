@@ -41,7 +41,6 @@ class CKoopa : public CGameObject
 protected:
 	float ax;
 	float ay;
-	int jumpTimer;
 	int type;
 
 	ULONGLONG shell_start;

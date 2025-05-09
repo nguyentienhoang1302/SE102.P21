@@ -5,6 +5,7 @@
 #include "Animations.h"
 #include "Coin.h"
 #include "Mushroom.h"
+#include "Leaf.h"
 
 #define ID_ANI_MBLOCK 101000
 #define ID_ANI_MBLOCK_EMPTY 102000

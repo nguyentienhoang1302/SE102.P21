@@ -18,6 +18,7 @@
 #include "PiranhaPlant.h"
 #include "Fireball.h"
 #include "Koopa.h"
+#include "Leaf.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -234,6 +235,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_LEAF: obj = new CLeaf(x, y); break;
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -365,10 +368,14 @@ void CPlayScene::Update(DWORD dt)
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
-
+	
+	//limit camera movement
 	if (cx < 0) cx = 0;
+	if (cx > 2560) cx = 2560;
+	if (cy > 0) cy = 0;
+	if (cy < -208) cy = -208;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx - 8, cy);
 
 	PurgeDeletedObjects();
 }
