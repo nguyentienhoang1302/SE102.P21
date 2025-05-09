@@ -123,9 +123,14 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level == MARIO_LEVEL_BIG)
 				{
 					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else if (level == MARIO_LEVEL_RACCOON)
+				{
+					level = MARIO_LEVEL_BIG;
 					StartUntouchable();
 				}
 				else
@@ -174,9 +179,14 @@ void CMario::OnCollisionWithPPlant(LPCOLLISIONEVENT e)
 {
 	if (untouchable == 0)
 	{
-		if (level > MARIO_LEVEL_SMALL)
+		if (level == MARIO_LEVEL_BIG)
 		{
 			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else if (level == MARIO_LEVEL_RACCOON)
+		{
+			level = MARIO_LEVEL_BIG;
 			StartUntouchable();
 		}
 		else
@@ -191,9 +201,14 @@ void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 {
 	if (untouchable == 0)
 	{
-		if (level > MARIO_LEVEL_SMALL)
+		if (level == MARIO_LEVEL_BIG)
 		{
 			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else if (level == MARIO_LEVEL_RACCOON)
+		{
+			level = MARIO_LEVEL_BIG;
 			StartUntouchable();
 		}
 		else
@@ -303,9 +318,14 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			if (koopa->GetState() != KOOPA_STATE_SHELL)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level == MARIO_LEVEL_BIG)
 				{
 					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else if (level == MARIO_LEVEL_RACCOON)
+				{
+					level = MARIO_LEVEL_BIG;
 					StartUntouchable();
 				}
 				else

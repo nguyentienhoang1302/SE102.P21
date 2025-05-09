@@ -74,33 +74,6 @@ bool CKoopa::IsOnPlatform(vector<LPGAMEOBJECT>* coObjects)
 	return false;
 }
 
-//bool CKoopa::IsOnPlatform(vector<LPGAMEOBJECT>* coObjects)
-//{
-//	float l, t, r, b;
-//	GetBoundingBox(l, t, r, b); // Get Koopa's bounding box
-//
-//	float xCenter = l + 8; // Center of Koopa's bounding box
-//	float yBottom = b + 1;       // Slightly below the bottom edge of Koopa
-//
-//	for (size_t i = 0; i < coObjects->size(); i++)
-//	{
-//		LPGAMEOBJECT obj = coObjects->at(i);
-//
-//		// Check if the object is blocking
-//		if (obj->IsBlocking())
-//		{
-//			float objL, objT, objR, objB;
-//			obj->GetBoundingBox(objL, objT, objR, objB);
-//			if (xCenter > objL && xCenter < objR && yBottom >= objT && yBottom <= objB)
-//			{
-//				return true; // Koopa is on a platform
-//			}
-//		}
-//	}
-//
-//	return false; // Koopa is not on a platform
-//}
-
 void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (state == KOOPA_STATE_SPIN || state == KOOPA_STATE_RED_SPIN)
@@ -257,7 +230,7 @@ void CKoopa::SetState(int state)
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		vy = 0;
-		ay = 0;
+		ay = KOOPA_GRAVITY;
 		break;
 	case KOOPA_STATE_WALK:
 		vx = -KOOPA_WALKING_SPEED;
@@ -274,7 +247,7 @@ void CKoopa::SetState(int state)
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		vy = 0;
-		ay = 0;
+		ay = KOOPA_GRAVITY;
 		break;
 	case KOOPA_STATE_RED_WALK:
 		vx = -KOOPA_WALKING_SPEED;
