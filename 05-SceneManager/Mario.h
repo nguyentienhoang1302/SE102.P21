@@ -20,6 +20,9 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
+#define MARIO_FLY_SPEED  0.5f
+#define MARIO_HOVER_SPEED  0.1f
+
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
@@ -39,6 +42,8 @@
 
 #define MARIO_STATE_HOLD_SHELL 800
 #define MARIO_STATE_RELEASE_SHELL 801
+
+#define MARIO_STATE_TAIL_ATTACK 900
 
 #pragma region ANIMATION_ID
 
@@ -124,6 +129,8 @@
 #define ID_ANI_MARIO_RACCOON_HOLD_SHELL_RIGHT_IDLE 2801
 #define ID_ANI_MARIO_RACCOON_HOLD_SHELL_LEFT_IDLE 2802
 
+#define ID_ANI_MARIO_RACCOON_TAIL_ATTACK 3000
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -145,8 +152,12 @@
 #define MARIO_SMALL_BBOX_WIDTH  13
 #define MARIO_SMALL_BBOX_HEIGHT 12
 
+#define MARIO_TAIL_ATTACK_BBOX_WIDTH  24
+#define MARIO_TAIL_ATTACK_BBOX_HEIGHT 24
+
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_TAIL_ATTACK_TIME 200
 
 class CMario : public CGameObject
 {
@@ -158,6 +169,7 @@ class CMario : public CGameObject
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
+	ULONGLONG tailAttack_start = -1;
 
 	int coin; 
 
@@ -216,4 +228,6 @@ public:
 
 	float Getvy() { return vy; }
 	float Getvx() { return vx; }
+
+	//void SetTailAttackStart(ULONGLONG t) { tailAttack_start = t; };
 };

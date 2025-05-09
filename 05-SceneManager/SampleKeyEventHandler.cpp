@@ -22,11 +22,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		{
 			mario->SetState(MARIO_STATE_JUMP);
 		}
-		if (/*mario->isOnPlatform == true && */mario->GetLevel() == MARIO_LEVEL_RACCOON && CGame::GetInstance()->IsKeyDown(DIK_A) && (abs(mario->Getvx()) == MARIO_RUNNING_SPEED) && mario->isFlying == false)
+		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && CGame::GetInstance()->IsKeyDown(DIK_A) && (abs(mario->Getvx()) == MARIO_RUNNING_SPEED))
 		{
 			mario->SetState(MARIO_STATE_FLY);
 		}
-		else if (mario->GetLevel() == MARIO_LEVEL_RACCOON && !mario->isOnPlatform)// && mario->Getvy() > 0)
+		else if (mario->GetLevel() == MARIO_LEVEL_RACCOON && !mario->isOnPlatform)
 		{
 			mario->SetState(MARIO_STATE_HOVER);
 			//mario->SetState(MARIO_STATE_FLY);
@@ -91,6 +91,11 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		if (mario->heldKoopa != nullptr)
 		{
 			mario->SetState(MARIO_STATE_RELEASE_SHELL);
+		}
+		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
+		{
+			mario->SetState(MARIO_STATE_TAIL_ATTACK);
+			break;
 		}
 		break;
 	}
