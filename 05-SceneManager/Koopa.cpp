@@ -184,7 +184,7 @@ void CKoopa::Render()
 	{
 		aniId = ID_ANI_KOOPA_WALK;
 	}
-	else if (state == KOOPA_STATE_SHELL)
+	else if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HELD)
 	{
 		aniId = ID_ANI_KOOPA_SHELL;
 	}
@@ -204,7 +204,7 @@ void CKoopa::Render()
 	{
 		aniId = ID_ANI_KOOPA_RED_SPIN;
 	}
-	else if (state == KOOPA_STATE_RED_SHELL)
+	else if (state == KOOPA_STATE_RED_SHELL || state == KOOPA_STATE_RED_HELD)
 	{
 		aniId = ID_ANI_KOOPA_RED_SHELL;
 	}
@@ -262,6 +262,16 @@ void CKoopa::SetState(int state)
 		ay = KOOPA_GRAVITY;
 		break;
 	case KOOPA_STATE_WAIT:
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
+	case KOOPA_STATE_HELD:
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
+	case KOOPA_STATE_RED_HELD:
 		vx = 0;
 		vy = 0;
 		ay = 0;

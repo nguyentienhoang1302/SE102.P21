@@ -5,6 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "Koopa.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.3f
@@ -36,6 +37,8 @@
 #define MARIO_STATE_FLY			700
 #define MARIO_STATE_HOVER		701
 
+#define MARIO_STATE_HOLD_SHELL 800
+#define MARIO_STATE_RELEASE_SHELL 801
 
 #pragma region ANIMATION_ID
 
@@ -162,6 +165,7 @@ public:
 	BOOLEAN isOnPlatform;
 	BOOLEAN isFlying = false;
 	BOOLEAN isHovering = false;
+	CKoopa* heldKoopa = nullptr;
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;

@@ -52,6 +52,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+	// Update the position of the held Koopa shell
+	if (heldKoopa != nullptr)
+	{
+		float marioX, marioY;
+		GetPosition(marioX, marioY);
+		heldKoopa->SetPosition(marioX + (nx > 0 ? 15 : -15), marioY - 2); // Offset based on Mario's direction
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -274,13 +282,33 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		}
 		else if (e->nx < 0)
 		{
-			koopa->SetState(KOOPA_STATE_SPIN);
-			koopa->SpinLeft();
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_SPIN);
+				koopa->SpinLeft();
+			}
 		}
 		else
 		{
-			koopa->SetState(KOOPA_STATE_SPIN);
-			koopa->SpinRight();
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_SPIN);
+				koopa->SpinRight();
+			}
 		}
 	}
 	else if (koopa->GetState() == KOOPA_STATE_RED_SHELL)
@@ -301,15 +329,35 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			}
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		else if (e->nx < 0) 
+		else if (e->nx < 0)
 		{
-			koopa->SetState(KOOPA_STATE_RED_SPIN);
-			koopa->SpinLeft();
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_RED_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_RED_SPIN);
+				koopa->SpinLeft();
+			}
 		}
 		else 
 		{
-			koopa->SetState(KOOPA_STATE_RED_SPIN);
-			koopa->SpinRight();
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_RED_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_RED_SPIN);
+				koopa->SpinRight();
+			}
 		}
 	}
 	else
@@ -661,6 +709,40 @@ void CMario::SetState(int state)
 		isHovering = true;
 		vy = 0.01f;
 		ay = 0;
+		break;
+	case MARIO_STATE_HOLD_SHELL:
+		if (heldKoopa != nullptr)
+		{
+			// Update the Koopa shell's position to follow Mario
+			float marioX, marioY;
+			GetPosition(marioX, marioY);
+			heldKoopa->SetPosition(marioX + (nx > 0 ? 15 : -15), marioY - 2); // Offset based on Mario's direction
+			heldKoopa->SetSpeed(0, 0); // Stop the shell's movement
+		}
+		break;
+
+	case MARIO_STATE_RELEASE_SHELL:
+		if (heldKoopa != nullptr)
+		{
+			// Throw the shell in Mario's facing direction
+			if (heldKoopa->GetState() == KOOPA_STATE_RED_HELD)
+			{
+				heldKoopa->SetState(KOOPA_STATE_RED_SPIN);
+			}
+			else
+			{
+				heldKoopa->SetState(KOOPA_STATE_SPIN);
+			}
+			if (nx > 0)
+			{
+				heldKoopa->SpinLeft();
+			}
+			else
+			{
+				heldKoopa->SpinRight();
+			}
+			heldKoopa = nullptr; // Mario is no longer holding the shell
+		}
 		break;
 	}
 

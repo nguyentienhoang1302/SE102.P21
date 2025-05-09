@@ -5,6 +5,7 @@
 
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Koopa.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
@@ -21,14 +22,14 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		{
 			mario->SetState(MARIO_STATE_JUMP);
 		}
-		if (mario->isOnPlatform == true && mario->GetLevel() == MARIO_LEVEL_RACCOON && CGame::GetInstance()->IsKeyDown(DIK_A) && (abs(mario->Getvx()) == MARIO_RUNNING_SPEED) && mario->isFlying == false)
+		if (/*mario->isOnPlatform == true && */mario->GetLevel() == MARIO_LEVEL_RACCOON && CGame::GetInstance()->IsKeyDown(DIK_A) && (abs(mario->Getvx()) == MARIO_RUNNING_SPEED) && mario->isFlying == false)
 		{
 			mario->SetState(MARIO_STATE_FLY);
 		}
-		else if (mario->GetLevel() == MARIO_LEVEL_RACCOON && !mario->isOnPlatform && mario->Getvy() > 0)
+		else if (mario->GetLevel() == MARIO_LEVEL_RACCOON && !mario->isOnPlatform)// && mario->Getvy() > 0)
 		{
-			//mario->SetState(MARIO_STATE_HOVER);
-			mario->SetState(MARIO_STATE_FLY);
+			mario->SetState(MARIO_STATE_HOVER);
+			//mario->SetState(MARIO_STATE_FLY);
 		}
 		break;
 	case DIK_1:
@@ -46,6 +47,30 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		//Reload();
 		break;
+	case DIK_A:
+		if (mario->heldKoopa == nullptr)
+		{
+			// Check for nearby Koopa shells to pick up
+			vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+			for (size_t i = 0; i < objects->size(); i++)
+			{
+				CKoopa* koopa = dynamic_cast<CKoopa*>(objects->at(i));
+				if (koopa != nullptr && (koopa->GetState() == KOOPA_STATE_SHELL || koopa->GetState() == KOOPA_STATE_RED_SHELL))
+				{
+					float marioX, marioY, koopaX, koopaY;
+					mario->GetPosition(marioX, marioY);
+					koopa->GetPosition(koopaX, koopaY);
+
+					// Check if Koopa shell is close enough to Mario
+					if (abs(marioX - koopaX) < 16 && abs(marioY - koopaY) < 16)
+					{
+						mario->heldKoopa = koopa; // Mario picks up the shell
+						mario->SetState(MARIO_STATE_HOLD_SHELL);
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -62,7 +87,14 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
+	case DIK_A:
+		if (mario->heldKoopa != nullptr)
+		{
+			mario->SetState(MARIO_STATE_RELEASE_SHELL);
+		}
+		break;
 	}
+
 }
 
 void CSampleKeyHandler::KeyState(BYTE *states)
@@ -72,14 +104,14 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
-		if (CGame::GetInstance()->IsKeyDown(DIK_A))
+		if (game->IsKeyDown(DIK_A) && mario->heldKoopa == nullptr)
 			mario->SetState(MARIO_STATE_RUNNING_RIGHT);
 		else
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (game->IsKeyDown(DIK_A))
+		if (game->IsKeyDown(DIK_A) && mario->heldKoopa == nullptr)
 			mario->SetState(MARIO_STATE_RUNNING_LEFT);
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
