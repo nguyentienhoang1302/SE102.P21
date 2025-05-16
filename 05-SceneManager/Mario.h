@@ -229,6 +229,4 @@ public:
 
 	float Getvy() { return vy; }
 	float Getvx() { return vx; }
-
-	//void SetTailAttackStart(ULONGLONG t) { tailAttack_start = t; };
 };

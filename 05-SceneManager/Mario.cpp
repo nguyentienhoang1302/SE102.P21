@@ -90,7 +90,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else
 				heldKoopa->SetState(KOOPA_STATE_WALK2);
 		}
-		//heldKoopa->SetState(KOOPA_STATE_WALK);
 		heldKoopa = nullptr;
 	}
 
@@ -829,6 +828,7 @@ void CMario::SetState(int state)
 			isSitting = true;
 			vx = 0; vy = 0.0f;
 			y +=MARIO_SIT_HEIGHT_ADJUST;
+			DebugOut(L"[INFO] SIT BEGIN\n");
 		}
 		break;
 
@@ -838,6 +838,7 @@ void CMario::SetState(int state)
 			isSitting = false;
 			state = MARIO_STATE_IDLE;
 			y -= MARIO_SIT_HEIGHT_ADJUST;
+			DebugOut(L"[INFO] SIT END\n");
 		}
 		break;
 
@@ -848,9 +849,8 @@ void CMario::SetState(int state)
 		{
 			isHovering = false;
 		}
-		isSitting = false;
 		isFlying = false;
-		DebugOut(L"[INFO] IDLE BEGIN\n");
+		//DebugOut(L"[INFO] IDLE BEGIN\n");
 		break;
 
 	case MARIO_STATE_DIE:
@@ -938,7 +938,7 @@ void CMario::SetState(int state)
 				subObject->SetSpeed(-0.1f, 0);
 			}
 			CreateSubObject = true;
-			DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer
+			//DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer
 		}
 		break;
 	}

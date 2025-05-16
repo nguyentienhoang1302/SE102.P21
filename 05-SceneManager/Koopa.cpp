@@ -105,6 +105,14 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			SetState(KOOPA_STATE_RED_WALK);
 		}
+		else if (state == KOOPA_STATE_WALK)
+		{
+			SetState(KOOPA_STATE_WALK2);
+		}
+		else if (state == KOOPA_STATE_WALK2)
+		{
+			SetState(KOOPA_STATE_WALK);
+		}
 	}
 }
 

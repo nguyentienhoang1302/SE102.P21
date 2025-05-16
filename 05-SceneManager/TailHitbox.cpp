@@ -68,5 +68,11 @@ void CTailHitbox::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 void CTailHitbox::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-	koopa->Delete();
+	if (koopa->GetState() == KOOPA_STATE_RED_SHELL || koopa->GetState() == KOOPA_STATE_SHELL)
+	{
+	}
+	else
+	{
+		koopa->Delete();
+	}
 }
