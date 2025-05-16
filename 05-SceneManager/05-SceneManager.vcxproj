@@ -171,8 +171,10 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
+    <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="TailHitbox.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -206,8 +208,10 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shadow.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprites.h" />
+    <ClInclude Include="TailHitbox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Tree.h" />

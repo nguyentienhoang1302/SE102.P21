@@ -21,7 +21,7 @@
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
 #define MARIO_FLY_SPEED  0.5f
-#define MARIO_HOVER_SPEED  0.1f
+#define MARIO_HOVER_SPEED  0.05f
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0

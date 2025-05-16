@@ -13,6 +13,7 @@
 #include "Fireball.h"
 #include "Brick.h"
 #include "Koopa.h"
+#include "TailHitbox.h"
 
 #include "Collision.h"
 #include "SampleKeyEventHandler.h"
@@ -93,6 +94,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		heldKoopa = nullptr;
 	}
 
+	// Delete tail hitbox after attack
+	if (subObject!= NULL && GetTickCount64() - tailAttack_start > MARIO_TAIL_ATTACK_TIME)
+	{
+		subObject->Delete();
+		subObject = NULL;
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//DebugOut(L"[INFO] STATE: %d\n", state);
 }
@@ -142,7 +150,6 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_WALK || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_JUMP) || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_LOWJUMP))
 	{
@@ -261,7 +268,6 @@ void CMario::OnCollisionWithFireball(LPCOLLISIONEVENT e)
 	}
 }
 
-
 void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {
 	CBrick* brick = (CBrick*)(e->obj);
@@ -274,166 +280,159 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
-	if (state == MARIO_STATE_TAIL_ATTACK)
+	float x0, y0;
+	koopa->GetPosition(x0, y0);
+	if ((e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_WALK) || (e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_JUMP))
 	{
-		koopa->Delete();
+		koopa->SetState(KOOPA_STATE_WALK);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
 	}
-	else
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_WALK)
 	{
-		float x0, y0;
-		koopa->GetPosition(x0, y0);
-		if ((e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_WALK) || (e->ny < 0 && koopa->GetState() == PARAKOOPA_STATE_JUMP))
-		{
-			koopa->SetState(KOOPA_STATE_WALK);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
-		else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_WALK)
-		{
-			koopa->SetState(KOOPA_STATE_SHELL);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
-		else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK)
-		{
-			koopa->SetState(KOOPA_STATE_RED_SHELL);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
-		else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK2)
-		{
-			koopa->SetState(KOOPA_STATE_RED_SHELL);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
-		else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_SPIN)
-		{
-			koopa->SetState(KOOPA_STATE_SHELL);
-			koopa->SetPosition(x0, y0 - 8);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
-		else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_SPIN)
-		{
-			koopa->SetState(KOOPA_STATE_RED_SHELL);
-			koopa->SetPosition(x0, y0 - 8);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
-		}
+		koopa->SetState(KOOPA_STATE_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK)
+	{
+		koopa->SetState(KOOPA_STATE_RED_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK2)
+	{
+		koopa->SetState(KOOPA_STATE_RED_SHELL);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_SPIN)
+	{
+		koopa->SetState(KOOPA_STATE_SHELL);
+		koopa->SetPosition(x0, y0 - 8);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
+	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_SPIN)
+	{
+		koopa->SetState(KOOPA_STATE_RED_SHELL);
+		koopa->SetPosition(x0, y0 - 8);
+		vy = -MARIO_JUMP_DEFLECT_SPEED;
+	}
 
-		else if (koopa->GetState() == KOOPA_STATE_SHELL)
+	else if (koopa->GetState() == KOOPA_STATE_SHELL)
+	{
+		if (e->ny < 0)
 		{
-			if (e->ny < 0)
+			koopa->SetState(KOOPA_STATE_SPIN);
+
+			float x0, y0;
+			koopa->GetPosition(x0, y0);
+			if (x < x0) // if mario is to the right of the shell, shell spins left
+			{
+				koopa->SpinLeft();
+			}
+			else if (x >= x0) // if mario is to the left of the shell, shell spins right
+			{
+				koopa->SpinRight();
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (e->nx < 0)
+		{
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
 			{
 				koopa->SetState(KOOPA_STATE_SPIN);
-
-				float x0, y0;
-				koopa->GetPosition(x0, y0);
-				if (x < x0) // if mario is to the right of the shell, shell spins left
-				{
-					koopa->SpinLeft();
-				}
-				else if (x >= x0) // if mario is to the left of the shell, shell spins right
-				{
-					koopa->SpinRight();
-				}
-				vy = -MARIO_JUMP_DEFLECT_SPEED;
-			}
-			else if (e->nx < 0)
-			{
-				if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
-				{
-					// Pick up the shell
-					heldKoopa = koopa;
-					heldKoopa->SetState(KOOPA_STATE_HELD);
-					SetState(MARIO_STATE_HOLD_SHELL);
-				}
-				else
-				{
-					koopa->SetState(KOOPA_STATE_SPIN);
-					koopa->SpinLeft();
-				}
-			}
-			else
-			{
-				if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
-				{
-					// Pick up the shell
-					heldKoopa = koopa;
-					heldKoopa->SetState(KOOPA_STATE_HELD);
-					SetState(MARIO_STATE_HOLD_SHELL);
-				}
-				else
-				{
-					koopa->SetState(KOOPA_STATE_SPIN);
-					koopa->SpinRight();
-				}
-			}
-		}
-		else if (koopa->GetState() == KOOPA_STATE_RED_SHELL)
-		{
-			if (e->ny < 0)
-			{
-				koopa->SetState(KOOPA_STATE_RED_SPIN);
-
-				float x0, y0;
-				koopa->GetPosition(x0, y0);
-				if (x < x0) // if mario is to the right of the shell, shell spins left
-				{
-					koopa->SpinLeft();
-				}
-				else if (x >= x0) // if mario is to the left of the shell, shell spins right
-				{
-					koopa->SpinRight();
-				}
-				vy = -MARIO_JUMP_DEFLECT_SPEED;
-			}
-			else if (e->nx < 0)
-			{
-				if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
-				{
-					// Pick up the shell
-					heldKoopa = koopa;
-					heldKoopa->SetState(KOOPA_STATE_RED_HELD);
-					SetState(MARIO_STATE_HOLD_SHELL);
-				}
-				else
-				{
-					koopa->SetState(KOOPA_STATE_RED_SPIN);
-					koopa->SpinLeft();
-				}
-			}
-			else
-			{
-				if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
-				{
-					// Pick up the shell
-					heldKoopa = koopa;
-					heldKoopa->SetState(KOOPA_STATE_RED_HELD);
-					SetState(MARIO_STATE_HOLD_SHELL);
-				}
-				else
-				{
-					koopa->SetState(KOOPA_STATE_RED_SPIN);
-					koopa->SpinRight();
-				}
+				koopa->SpinLeft();
 			}
 		}
 		else
 		{
-			if (untouchable == 0)
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
 			{
-				if (koopa->GetState() != KOOPA_STATE_SHELL)
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_SPIN);
+				koopa->SpinRight();
+			}
+		}
+	}
+	else if (koopa->GetState() == KOOPA_STATE_RED_SHELL)
+	{
+		if (e->ny < 0)
+		{
+			koopa->SetState(KOOPA_STATE_RED_SPIN);
+
+			float x0, y0;
+			koopa->GetPosition(x0, y0);
+			if (x < x0) // if mario is to the right of the shell, shell spins left
+			{
+				koopa->SpinLeft();
+			}
+			else if (x >= x0) // if mario is to the left of the shell, shell spins right
+			{
+				koopa->SpinRight();
+			}
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else if (e->nx < 0)
+		{
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_RED_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_RED_SPIN);
+				koopa->SpinLeft();
+			}
+		}
+		else
+		{
+			if (CGame::GetInstance()->IsKeyDown(DIK_A) && heldKoopa == nullptr)
+			{
+				// Pick up the shell
+				heldKoopa = koopa;
+				heldKoopa->SetState(KOOPA_STATE_RED_HELD);
+				SetState(MARIO_STATE_HOLD_SHELL);
+			}
+			else
+			{
+				koopa->SetState(KOOPA_STATE_RED_SPIN);
+				koopa->SpinRight();
+			}
+		}
+	}
+	else
+	{
+		if (untouchable == 0)
+		{
+			if (koopa->GetState() != KOOPA_STATE_SHELL)
+			{
+				if (level == MARIO_LEVEL_BIG)
 				{
-					if (level == MARIO_LEVEL_BIG)
-					{
-						level = MARIO_LEVEL_SMALL;
-						StartUntouchable();
-					}
-					else if (level == MARIO_LEVEL_RACCOON)
-					{
-						level = MARIO_LEVEL_BIG;
-						StartUntouchable();
-					}
-					else
-					{
-						DebugOut(L">>> Mario DIE >>> \n");
-						SetState(MARIO_STATE_DIE);
-					}
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else if (level == MARIO_LEVEL_RACCOON)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
 				}
 			}
 		}
@@ -925,6 +924,20 @@ void CMario::SetState(int state)
 		{
 			state = MARIO_STATE_TAIL_ATTACK;
 			tailAttack_start = GetTickCount64();
+			float marioX, marioY;
+			GetPosition(marioX, marioY);
+			subObject = new CTailHitbox(marioX, marioY);
+			if (nx > 0)
+			{
+				subObject->SetPosition(marioX - 6, marioY + 6);
+				subObject->SetSpeed(0.12f, 0);
+			}
+			else
+			{
+				subObject->SetPosition(marioX + 6, marioY + 6);
+				subObject->SetSpeed(-0.12f, 0);
+			}
+			CreateSubObject = true;
 			DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer
 		}
 		break;

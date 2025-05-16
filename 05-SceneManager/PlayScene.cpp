@@ -19,6 +19,7 @@
 #include "Fireball.h"
 #include "Koopa.h"
 #include "Leaf.h"
+#include "Shadow.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -236,6 +237,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	case OBJECT_TYPE_LEAF: obj = new CLeaf(x, y); break;
+
+	case OBJECT_TYPE_SHADOW:
+	{
+		int aniId = (int)atoi(tokens[3].c_str());
+		obj = new CShadow(x, y, aniId);
+		break;
+	}
 
 	case OBJECT_TYPE_PORTAL:
 	{
