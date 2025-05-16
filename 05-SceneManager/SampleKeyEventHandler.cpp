@@ -48,6 +48,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		//Reload();
 		break;
 	case DIK_A:
+		if (mario->heldKoopa != nullptr)
+		{
+			mario->SetState(MARIO_STATE_RELEASE_SHELL);
+		}
+		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
+		{
+			mario->SetState(MARIO_STATE_TAIL_ATTACK);
+			break;
+		}
 		if (mario->heldKoopa == nullptr)
 		{
 			// Check for nearby Koopa shells to pick up
@@ -88,15 +97,15 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
 	case DIK_A:
-		if (mario->heldKoopa != nullptr)
-		{
-			mario->SetState(MARIO_STATE_RELEASE_SHELL);
-		}
-		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
-		{
-			mario->SetState(MARIO_STATE_TAIL_ATTACK);
-			break;
-		}
+		//if (mario->heldKoopa != nullptr)
+		//{
+		//	mario->SetState(MARIO_STATE_RELEASE_SHELL);
+		//}
+		//if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
+		//{
+		//	mario->SetState(MARIO_STATE_TAIL_ATTACK);
+		//	break;
+		//}
 		break;
 	}
 

@@ -90,7 +90,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else
 				heldKoopa->SetState(KOOPA_STATE_WALK2);
 		}
-			//heldKoopa->SetState(KOOPA_STATE_WALK);
+		//heldKoopa->SetState(KOOPA_STATE_WALK);
 		heldKoopa = nullptr;
 	}
 
@@ -930,12 +930,12 @@ void CMario::SetState(int state)
 			if (nx > 0)
 			{
 				subObject->SetPosition(marioX - 6, marioY + 6);
-				subObject->SetSpeed(0.12f, 0);
+				subObject->SetSpeed(0.1f, 0);
 			}
 			else
 			{
 				subObject->SetPosition(marioX + 6, marioY + 6);
-				subObject->SetSpeed(-0.12f, 0);
+				subObject->SetSpeed(-0.1f, 0);
 			}
 			CreateSubObject = true;
 			DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer

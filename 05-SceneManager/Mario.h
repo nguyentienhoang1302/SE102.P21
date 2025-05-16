@@ -8,19 +8,19 @@
 #include "Koopa.h"
 
 #define MARIO_WALKING_SPEED		0.1f
-#define MARIO_RUNNING_SPEED		0.3f
+#define MARIO_RUNNING_SPEED		0.2f
 
 #define MARIO_ACCEL_WALK_X	0.0002f
 #define MARIO_ACCEL_RUN_X	0.0003f
 
-#define MARIO_JUMP_SPEED_Y		0.5f
-#define MARIO_JUMP_RUN_SPEED_Y	0.6f
+#define MARIO_JUMP_SPEED_Y		0.35f
+#define MARIO_JUMP_RUN_SPEED_Y	0.4f
 
-#define MARIO_GRAVITY			0.002f
+#define MARIO_GRAVITY			0.001f
 
-#define MARIO_JUMP_DEFLECT_SPEED  0.4f
+#define MARIO_JUMP_DEFLECT_SPEED  0.3f
 
-#define MARIO_FLY_SPEED  0.5f
+#define MARIO_FLY_SPEED  0.3f
 #define MARIO_HOVER_SPEED  0.05f
 
 #define MARIO_STATE_DIE				-10

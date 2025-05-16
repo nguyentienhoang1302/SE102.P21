@@ -20,6 +20,7 @@
 #include "Koopa.h"
 #include "Leaf.h"
 #include "Shadow.h"
+#include "HUD.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -254,6 +255,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 
+	case OBJECT_TYPE_HUD:
+	{
+		int spriteId = (int)atoi(tokens[3].c_str());
+		obj = new CHUD(x, y, spriteId);
+		HUD = (CHUD*)obj;
+		break;
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -382,6 +390,13 @@ void CPlayScene::Update(DWORD dt)
 	if (cx > 2560) cx = 2560;
 	if (cy > 0) cy = 0;
 	if (cy < -208) cy = -208;
+
+	//set HUD position after camera position
+	if (HUD != NULL)
+	{
+		HUD->SetPosition(cx+120, cy + 227);
+		HUD->Update(dt);
+	}
 
 	CGame::GetInstance()->SetCamPos(cx - 8, cy);
 

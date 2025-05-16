@@ -17,6 +17,7 @@ goomba.txt
 koopa.txt
 leaf.txt
 shadow.txt
+HUD.txt
 
 #
 [OBJECTS]
@@ -665,6 +666,8 @@ shadow.txt
 16	1328	-46	164000
 16	1312	-46	165000
 
+#HUD
+500	0	0	500001
 
 #4testing
 #3	150	150	1
