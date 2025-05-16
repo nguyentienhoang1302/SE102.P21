@@ -184,6 +184,10 @@ void CKoopa::Render()
 	{
 		aniId = ID_ANI_KOOPA_WALK;
 	}
+	else if (state == KOOPA_STATE_WALK2)
+	{
+		aniId = ID_ANI_KOOPA_WALK2;
+	}
 	else if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_HELD)
 	{
 		aniId = ID_ANI_KOOPA_SHELL;
@@ -238,6 +242,9 @@ void CKoopa::SetState(int state)
 	case PARAKOOPA_STATE_WALK:
 		walk_start = GetTickCount64();
 		vx = -KOOPA_WALKING_SPEED;
+		break;
+	case KOOPA_STATE_WALK2:
+		vx = KOOPA_WALKING_SPEED;
 		break;
 	case PARAKOOPA_STATE_JUMP:
 		vy = -KOOPA_VY_JUMP;

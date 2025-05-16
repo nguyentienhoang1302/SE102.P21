@@ -73,6 +73,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}		
 	}
 
+	if (heldKoopa != nullptr && GetTickCount64() - heldKoopa_start > KOOPA_SHELL_TIMEOUT)
+	{
+		if (heldKoopa->GetState() == KOOPA_STATE_RED_HELD)
+		{
+			if (nx < 0)
+				heldKoopa->SetState(KOOPA_STATE_RED_WALK);
+			else
+				heldKoopa->SetState(KOOPA_STATE_RED_WALK2);
+		}
+		else
+		{
+			if (nx < 0)
+				heldKoopa->SetState(KOOPA_STATE_WALK);
+			else
+				heldKoopa->SetState(KOOPA_STATE_WALK2);
+		}
+			//heldKoopa->SetState(KOOPA_STATE_WALK);
+		heldKoopa = nullptr;
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//DebugOut(L"[INFO] STATE: %d\n", state);
 }
@@ -854,6 +874,7 @@ void CMario::SetState(int state)
 		ay = 0;
 		break;
 	case MARIO_STATE_HOLD_SHELL:
+		heldKoopa_start = GetTickCount64();
 		if (heldKoopa != nullptr)
 		{
 			// Update the Koopa shell's position to follow Mario

@@ -170,6 +170,7 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 	ULONGLONG tailAttack_start = -1;
+	ULONGLONG heldKoopa_start = -1;
 
 	int coin; 
 
