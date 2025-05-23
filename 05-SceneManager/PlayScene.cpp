@@ -414,6 +414,9 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i]->RenderPriority() == 2)
 			objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++)
+		if (objects[i]->RenderPriority() == 3)
+			objects[i]->Render();
 	if (player)
 		player->Render();
 }

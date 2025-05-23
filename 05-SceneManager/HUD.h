@@ -14,6 +14,6 @@ public:
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 
-	int RenderPriority() { return 2; }
+	int RenderPriority() { return 3; }
 };
 

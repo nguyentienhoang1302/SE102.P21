@@ -747,19 +747,57 @@ int CMario::GetAniIdRaccoon()
 
 void CMario::Render()
 {
-	CAnimations* animations = CAnimations::GetInstance();
-	int aniId = -1;
+	// Flashing effect when untouchable
+	if (untouchable)
+	{
+		// Flash: only render on even frames (adjust as needed)
+		if ((GetTickCount64() / 100) % 2 == 0)
+		{
+			CAnimations* animations = CAnimations::GetInstance();
+			int aniId = -1;
 
-	if (state == MARIO_STATE_DIE)
-		aniId = ID_ANI_MARIO_DIE;
-	else if (level == MARIO_LEVEL_BIG)
-		aniId = GetAniIdBig();
-	else if (level == MARIO_LEVEL_SMALL)
-		aniId = GetAniIdSmall();
-	else if (level == MARIO_LEVEL_RACCOON)
-		aniId = GetAniIdRaccoon();
+			if (state == MARIO_STATE_DIE)
+				aniId = ID_ANI_MARIO_DIE;
+			else if (level == MARIO_LEVEL_BIG)
+				aniId = GetAniIdBig();
+			else if (level == MARIO_LEVEL_SMALL)
+				aniId = GetAniIdSmall();
+			else if (level == MARIO_LEVEL_RACCOON)
+				aniId = GetAniIdRaccoon();
 
-	animations->Get(aniId)->Render(x, y);
+			animations->Get(aniId)->Render(x, y);
+		}
+	}
+	else
+	{
+		// Normal render
+		CAnimations* animations = CAnimations::GetInstance();
+		int aniId = -1;
+
+		if (state == MARIO_STATE_DIE)
+			aniId = ID_ANI_MARIO_DIE;
+		else if (level == MARIO_LEVEL_BIG)
+			aniId = GetAniIdBig();
+		else if (level == MARIO_LEVEL_SMALL)
+			aniId = GetAniIdSmall();
+		else if (level == MARIO_LEVEL_RACCOON)
+			aniId = GetAniIdRaccoon();
+
+		animations->Get(aniId)->Render(x, y);
+	}
+	//CAnimations* animations = CAnimations::GetInstance();
+	//int aniId = -1;
+
+	//if (state == MARIO_STATE_DIE)
+	//	aniId = ID_ANI_MARIO_DIE;
+	//else if (level == MARIO_LEVEL_BIG)
+	//	aniId = GetAniIdBig();
+	//else if (level == MARIO_LEVEL_SMALL)
+	//	aniId = GetAniIdSmall();
+	//else if (level == MARIO_LEVEL_RACCOON)
+	//	aniId = GetAniIdRaccoon();
+
+	//animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();
 	
