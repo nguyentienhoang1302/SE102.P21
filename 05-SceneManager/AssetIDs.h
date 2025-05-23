@@ -30,7 +30,7 @@
 #define OBJECT_TYPE_PORTAL	50
 
 #define OBJECT_TYPE_HUD 500
-
+#define OBJECT_TYPE_POINT 501
 
 #pragma region MARIO 
 

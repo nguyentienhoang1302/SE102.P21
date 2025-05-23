@@ -15,6 +15,7 @@ protected:
 
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 0; }
+	int used = 0; // 0 - not used, 1 - used
 
 public:
 	CTailHitbox(float x, float y);
@@ -24,4 +25,5 @@ public:
 	void OnCollisionWithMBlock(LPCOLLISIONEVENT e);
 
 	int RenderPriority() { return 2; }
+	int IsUsed() { return used; }
 };

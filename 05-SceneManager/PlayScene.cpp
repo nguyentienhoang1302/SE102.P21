@@ -21,6 +21,7 @@
 #include "Leaf.h"
 #include "Shadow.h"
 #include "HUD.h"
+#include "Point.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -263,6 +264,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_POINT:
+	{
+		int point = atoi(tokens[3].c_str());
+		obj = new CPoint(x, y, point);
+		objects.push_back(obj);
+		break;
+	}
+
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
@@ -471,4 +480,9 @@ void CPlayScene::PurgeDeletedObjects()
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
+}
+
+void CPlayScene::AddEffect(LPGAMEOBJECT obj)
+{
+	objects.push_back(obj);
 }

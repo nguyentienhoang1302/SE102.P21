@@ -18,6 +18,7 @@ koopa.txt
 leaf.txt
 shadow.txt
 HUD.txt
+point.txt
 
 #
 [OBJECTS]

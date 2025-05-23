@@ -14,9 +14,11 @@
 #include "Brick.h"
 #include "Koopa.h"
 #include "TailHitbox.h"
+#include "Point.h"
 
 #include "Collision.h"
 #include "SampleKeyEventHandler.h"
+#include "PlayScene.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -93,8 +95,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		heldKoopa = nullptr;
 	}
 
-	// Delete tail hitbox after attack
-	if (subObject!= NULL && GetTickCount64() - tailAttack_start > MARIO_TAIL_ATTACK_TIME)
+	//Delete used hitbox immediately and unused hitbox after timeout
+	CTailHitbox* tail = dynamic_cast<CTailHitbox*>(subObject);
+	if (subObject != nullptr && tail->IsUsed() == 0 && GetTickCount64() - tailAttack_start > MARIO_TAIL_ATTACK_TIME)
+	{
+		subObject->Delete();
+		subObject = NULL;
+	}
+	else if (subObject != nullptr && tail->IsUsed() == 1)
 	{
 		subObject->Delete();
 		subObject = NULL;
@@ -149,10 +157,18 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	float gx, gy;
+	goomba->GetPosition(gx, gy);
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_WALK || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_JUMP) || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_LOWJUMP))
 	{
 		{
+			//goomba->CreateSubObject = true;
+			//goomba->subObject = new CPoint(gx, gy - 16, 100);
+			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+			p->AddEffect(effectPoint);
 			goomba->ParagoombaGetHit();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
@@ -161,6 +177,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (goomba->GetState() != GOOMBA_STATE_DIE)
 		{
+			//goomba->CreateSubObject = true;
+			//goomba->subObject = new CPoint(gx, gy - 16, 100);
+			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+			p->AddEffect(effectPoint);
 			goomba->SetState(GOOMBA_STATE_DIE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
@@ -209,6 +231,14 @@ void CMario::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	if (e->ny > 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
 		coin++;
+		if (mysteryblock->getContent() == 1) {
+			float gx, gy;
+			mysteryblock->GetPosition(gx, gy);
+			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+			p->AddEffect(effectPoint);
+		}
 	}
 }
 
@@ -221,6 +251,12 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 		level = MARIO_LEVEL_BIG;
 		StartUntouchable();
 	}
+	float gx, gy;
+	e->obj->GetPosition(gx, gy);
+	LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 1000);
+	LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+	LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+	p->AddEffect(effectPoint);
 }
 
 void CMario::OnCollisionWithPPlant(LPCOLLISIONEVENT e)
@@ -285,21 +321,37 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	{
 		koopa->SetState(KOOPA_STATE_WALK);
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		LPGAMEOBJECT effectPoint = new CPoint(x0, y0 - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_WALK)
 	{
 		koopa->SetState(KOOPA_STATE_SHELL);
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		LPGAMEOBJECT effectPoint = new CPoint(x0, y0 - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK)
 	{
 		koopa->SetState(KOOPA_STATE_RED_SHELL);
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		LPGAMEOBJECT effectPoint = new CPoint(x0, y0 - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_RED_WALK2)
 	{
 		koopa->SetState(KOOPA_STATE_RED_SHELL);
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
+		LPGAMEOBJECT effectPoint = new CPoint(x0, y0 - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 	else if (e->ny < 0 && koopa->GetState() == KOOPA_STATE_SPIN)
 	{
@@ -447,6 +499,12 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 		level = MARIO_LEVEL_RACCOON;
 		StartUntouchable();
 	}
+	float gx, gy;
+	e->obj->GetPosition(gx, gy);
+	LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 1000);
+	LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+	LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+	p->AddEffect(effectPoint);
 }
 
 //
@@ -957,9 +1015,15 @@ void CMario::SetState(int state)
 		}
 		break;
 	case MARIO_STATE_TAIL_ATTACK:
-		ax = 0;
+		//ax = 0;
 		if (level == MARIO_LEVEL_RACCOON)
 		{
+			// If there is an old hitbox, delete it first
+			if (subObject != nullptr && !subObject->IsDeleted())
+			{
+				subObject->Delete();
+				subObject = nullptr;
+			}
 			state = MARIO_STATE_TAIL_ATTACK;
 			tailAttack_start = GetTickCount64();
 			float marioX, marioY;
@@ -968,12 +1032,12 @@ void CMario::SetState(int state)
 			if (nx > 0)
 			{
 				subObject->SetPosition(marioX - 6, marioY + 6);
-				subObject->SetSpeed(0.1f, 0);
+				subObject->SetSpeed(0.12f, 0);
 			}
 			else
 			{
 				subObject->SetPosition(marioX + 6, marioY + 6);
-				subObject->SetSpeed(-0.1f, 0);
+				subObject->SetSpeed(-0.12f, 0);
 			}
 			CreateSubObject = true;
 			//DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer

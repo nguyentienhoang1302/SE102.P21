@@ -24,3 +24,4 @@ height	240
 60	textures\intro.png
 70	textures\map.png
 80	textures\HUD.png
+90	textures\effect.png

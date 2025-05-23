@@ -49,12 +49,14 @@ void CTailHitbox::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	{
 		e->obj->Delete();
 	}
+	used = 1;
 }
 
 void CTailHitbox::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	goomba->Delete();
+	used = 1;
 }
 
 void CTailHitbox::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
@@ -63,6 +65,7 @@ void CTailHitbox::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	if (e->nx != 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
 	}
+	used = 1;
 }
 
 void CTailHitbox::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
@@ -75,4 +78,5 @@ void CTailHitbox::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	{
 		koopa->Delete();
 	}
+	used = 1;
 }
