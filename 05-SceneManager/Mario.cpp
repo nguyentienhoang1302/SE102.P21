@@ -163,8 +163,6 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	if (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_WALK || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_JUMP) || (e->ny < 0 && goomba->GetState() == PARAGOOMBA_STATE_LOWJUMP))
 	{
 		{
-			//goomba->CreateSubObject = true;
-			//goomba->subObject = new CPoint(gx, gy - 16, 100);
 			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
 			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
 			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
@@ -177,8 +175,6 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (goomba->GetState() != GOOMBA_STATE_DIE)
 		{
-			//goomba->CreateSubObject = true;
-			//goomba->subObject = new CPoint(gx, gy - 16, 100);
 			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
 			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
 			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
@@ -187,7 +183,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
-	else // hit by Goomba
+	else if(goomba->GetState() != GOOMBA_STATE_DIE_FROM_ATTACK && goomba->GetState() != PARAGOOMBA_STATE_DIE_FROM_ATTACK) // hit by Goomba
 	{
 		if (untouchable == 0)
 		{

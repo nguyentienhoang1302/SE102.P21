@@ -3,6 +3,7 @@
 #include "Brick.h"
 #include "Goomba.h"
 #include "MysteryBlock.h"
+#include "Game.h"
 
 void CTailHitbox::Render()
 {
@@ -55,7 +56,11 @@ void CTailHitbox::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 void CTailHitbox::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-	goomba->Delete();
+	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+	if(x1>x)
+		goomba->DieFromAttack(-1);
+	else
+		goomba->DieFromAttack(1);
 	used = 1;
 }
 

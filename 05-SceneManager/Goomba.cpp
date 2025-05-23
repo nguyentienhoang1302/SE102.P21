@@ -1,5 +1,7 @@
 #include "Goomba.h"
 #include "Game.h"
+#include "PlayScene.h"
+#include "Point.h"
 
 CGoomba::CGoomba(float x, float y, int type):CGameObject(x, y)
 {
@@ -61,6 +63,17 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	if (state == GOOMBA_STATE_DIE_FROM_ATTACK || state == PARAGOOMBA_STATE_DIE_FROM_ATTACK)
+	{
+		y += vy * dt;
+		x += vx * dt;
+		if (GetTickCount64() - die_start > GOOMBA_DIE_FROM_ATTACK_TIMEOUT)
+		{
+			isDeleted = true;
+		}
+		return;
+	}
 
 	if ( (state==GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
 	{
@@ -148,6 +161,14 @@ void CGoomba::Render()
 	{
 		aniId = ID_ANI_GOOMBA_WAITING;
 	}
+	else if (state == GOOMBA_STATE_DIE_FROM_ATTACK)
+	{
+		aniId = ID_ANI_GOOMBA_DIE_FROM_ATTACK;
+	}
+	else if (state == PARAGOOMBA_STATE_DIE_FROM_ATTACK)
+	{
+		aniId = ID_ANI_PARAGOOMBA_DIE_FROM_ATTACK;
+	}
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
@@ -181,6 +202,10 @@ void CGoomba::SetState(int state)
 		case GOOMBA_STATE_WAITING:
 			vx = 0;
 			break;
+		case GOOMBA_STATE_DIE_FROM_ATTACK:
+			die_start = GetTickCount64();
+		case PARAGOOMBA_STATE_DIE_FROM_ATTACK:
+			die_start = GetTickCount64();
 	}
 }
 
@@ -195,4 +220,23 @@ void CGoomba::ParagoombaGetHit()
 		vx = -vx;
 	}
 	wingless = true;
+}
+
+void CGoomba::DieFromAttack(int Direction)
+{
+	if (state != GOOMBA_STATE_DIE_FROM_ATTACK && state != PARAGOOMBA_STATE_DIE_FROM_ATTACK)
+	{
+		ax = 0;
+		ay = GRAVITY_DIE_FROM_ATTACK;
+		vx = VX_DIE_FROM_ATTACK * Direction;
+		vy = -VY_DIE_FROM_ATTACK;
+		LPGAMEOBJECT effectPoint = new CPoint(x, y - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
+		if (state == GOOMBA_STATE_WALKING)
+			SetState(GOOMBA_STATE_DIE_FROM_ATTACK);
+		else
+			SetState(PARAGOOMBA_STATE_DIE_FROM_ATTACK);
+	}
 }

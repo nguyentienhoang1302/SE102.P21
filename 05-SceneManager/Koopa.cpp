@@ -4,6 +4,7 @@
 #include "MysteryBlock.h"
 #include "Mario.h"
 #include "PlayScene.h"
+#include "Point.h"
 
 CKoopa::CKoopa(float x, float y, int type) :CGameObject(x, y)
 {
@@ -299,17 +300,22 @@ void CKoopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 
-	if (goomba->GetState() == PARAGOOMBA_STATE_WALK || goomba->GetState() == PARAGOOMBA_STATE_JUMP)
-	{
-		goomba->ParagoombaGetHit();
-	}
-	else if (goomba->GetState() == GOOMBA_STATE_WALKING)
-	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
-		{
-			goomba->SetState(GOOMBA_STATE_DIE);
-		}
-	}
+	//if (goomba->GetState() == PARAGOOMBA_STATE_WALK || goomba->GetState() == PARAGOOMBA_STATE_JUMP)
+	//{
+	//	goomba->ParagoombaGetHit();
+	//}
+	//else if (goomba->GetState() == GOOMBA_STATE_WALKING)
+	//{
+	//	if (goomba->GetState() != GOOMBA_STATE_DIE)
+	//	{
+	//		goomba->SetState(GOOMBA_STATE_DIE);
+	//	}
+	//}
+	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+	if (x1 > x)
+		goomba->DieFromAttack(-1);
+	else
+		goomba->DieFromAttack(1);
 }
 
 void CKoopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
@@ -352,6 +358,14 @@ void CKoopa::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	CMBlock* mysteryblock = (CMBlock*)(e->obj);
 	if (e->nx != 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
+	}
+	if (mysteryblock->getContent() == 1) {
+		float gx, gy;
+		mysteryblock->GetPosition(gx, gy);
+		LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 }
 
