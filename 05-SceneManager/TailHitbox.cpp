@@ -47,7 +47,7 @@ void CTailHitbox::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	CBrick* brick = (CBrick*)(e->obj);
 	if (brick->IsBreakable() == 1)
 	{
-		e->obj->Delete();
+		brick->Break();
 	}
 	used = 1;
 }

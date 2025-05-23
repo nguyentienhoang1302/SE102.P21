@@ -308,7 +308,7 @@ void CMario::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 	CBrick* brick = (CBrick*)(e->obj);
 	if (brick->IsBreakable() == 1 && level != MARIO_LEVEL_SMALL && e->ny > 0)
 	{
-		e->obj->Delete();
+		brick->Break();
 	}
 }
 

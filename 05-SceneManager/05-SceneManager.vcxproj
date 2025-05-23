@@ -154,6 +154,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ColorBlock.cpp" />
     <ClCompile Include="DarkZone.cpp" />
+    <ClCompile Include="Debris.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ColorBlock.h" />
     <ClInclude Include="DarkZone.h" />
+    <ClInclude Include="Debris.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Fireball.h" />
     <ClInclude Include="Game.h" />

@@ -31,6 +31,7 @@
 
 #define OBJECT_TYPE_HUD 500
 #define OBJECT_TYPE_POINT 501
+#define OBJECT_TYPE_DEBRIS 502
 
 #pragma region MARIO 
 

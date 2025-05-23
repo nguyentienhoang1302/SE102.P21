@@ -19,4 +19,5 @@ public:
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	int IsBreakable();
 	int RenderPriority() { return 2; }
+	void Break();
 };
