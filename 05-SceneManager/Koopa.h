@@ -5,6 +5,8 @@
 #define KOOPA_WALKING_SPEED 0.05f
 #define KOOPA_VY_JUMP 0.40f
 #define KOOPA_SPINNING_SPEED 0.25f
+#define KOOPA_VY_DIE_FROM_ATTACK -0.3f
+#define KOOPA_VX_DIE_FROM_ATTACK 0.1f
 
 #define KOOPA_BBOX_WIDTH 16
 #define KOOPA_BBOX_HEIGHT 24
@@ -13,6 +15,7 @@
 #define PARAKOOPA_BBOX_HEIGHT 24
 
 #define KOOPA_SHELL_TIMEOUT 5000
+#define KOOPA_DIE_FROM_ATTACK_TIMEOUT 2000
 
 #define KOOPA_STATE_WAIT 000
 #define KOOPA_STATE_WALK 100
@@ -27,6 +30,8 @@
 #define KOOPA_STATE_RED_WALK2 900
 #define KOOPA_STATE_HELD 1000
 #define KOOPA_STATE_RED_HELD 1100
+#define KOOPA_STATE_DIE_FROM_ATTACK 1200
+#define KOOPA_STATE_RED_DIE_FROM_ATTACK 1300
 
 #define ID_ANI_KOOPA_WAIT 31000
 #define ID_ANI_KOOPA_WALK 31000
@@ -39,6 +44,8 @@
 #define ID_ANI_KOOPA_RED_SHELL 37000
 #define ID_ANI_KOOPA_RED_SPIN 38000
 #define ID_ANI_KOOPA_RED_WALK2 39000
+#define ID_ANI_KOOPA_DIE_FROM_ATTACK 39991
+#define ID_ANI_KOOPA_RED_DIE_FROM_ATTACK 39992
 
 class CKoopa : public CGameObject
 {
@@ -49,6 +56,7 @@ protected:
 
 	ULONGLONG shell_start;
 	ULONGLONG walk_start;
+	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -73,4 +81,5 @@ public:
 	virtual void SpinLeft();
 	virtual void SpinRight();
 	int RenderPriority() { return 2; }
+	void DieFromAttack(int Direction);
 };

@@ -81,7 +81,11 @@ void CTailHitbox::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	}
 	else
 	{
-		koopa->Delete();
+		float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+		if (x1 > x)
+			koopa->DieFromAttack(-1);
+		else
+			koopa->DieFromAttack(1);
 	}
 	used = 1;
 }

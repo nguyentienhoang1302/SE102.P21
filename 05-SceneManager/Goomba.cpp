@@ -204,8 +204,10 @@ void CGoomba::SetState(int state)
 			break;
 		case GOOMBA_STATE_DIE_FROM_ATTACK:
 			die_start = GetTickCount64();
+			break;
 		case PARAGOOMBA_STATE_DIE_FROM_ATTACK:
 			die_start = GetTickCount64();
+			break;
 	}
 }
 
@@ -230,13 +232,14 @@ void CGoomba::DieFromAttack(int Direction)
 		ay = GRAVITY_DIE_FROM_ATTACK;
 		vx = VX_DIE_FROM_ATTACK * Direction;
 		vy = -VY_DIE_FROM_ATTACK;
-		LPGAMEOBJECT effectPoint = new CPoint(x, y - 16, 100);
-		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
-		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
-		p->AddEffect(effectPoint);
 		if (state == GOOMBA_STATE_WALKING)
 			SetState(GOOMBA_STATE_DIE_FROM_ATTACK);
 		else
 			SetState(PARAGOOMBA_STATE_DIE_FROM_ATTACK);
+
+		LPGAMEOBJECT effectPoint = new CPoint(x, y - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 }

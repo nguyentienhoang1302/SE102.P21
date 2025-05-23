@@ -122,6 +122,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (state == KOOPA_STATE_DIE_FROM_ATTACK || state == KOOPA_STATE_RED_DIE_FROM_ATTACK)
+	{
+		y += vy * dt;
+		x += vx * dt;
+		if (GetTickCount64() - die_start > KOOPA_DIE_FROM_ATTACK_TIMEOUT)
+		{
+			isDeleted = true;
+		}
+		return;
+	}
+
 	if (state == KOOPA_STATE_RED_WALK) {
 		if (!IsOnPlatform(coObjects))
 		{
@@ -229,6 +240,14 @@ void CKoopa::Render()
 	{
 		aniId = ID_ANI_KOOPA_RED_WALK2;
 	}
+	else if (state == KOOPA_STATE_DIE_FROM_ATTACK)
+	{
+		aniId = ID_ANI_KOOPA_DIE_FROM_ATTACK;
+	}
+	else if (state == KOOPA_STATE_RED_DIE_FROM_ATTACK)
+	{
+		aniId = ID_ANI_KOOPA_RED_DIE_FROM_ATTACK;
+	}
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
@@ -292,7 +311,16 @@ void CKoopa::SetState(int state)
 		vy = 0;
 		ay = 0;
 		break;
+	case KOOPA_STATE_DIE_FROM_ATTACK:
+		die_start = GetTickCount64();
+		break;
+	case KOOPA_STATE_RED_DIE_FROM_ATTACK:
+		die_start = GetTickCount64();
+		break;
 	}
+
+	if (this->state == KOOPA_STATE_DIE_FROM_ATTACK || this->state == KOOPA_STATE_RED_DIE_FROM_ATTACK) return;
+
 	CGameObject::SetState(state);
 }
 
@@ -322,24 +350,29 @@ void CKoopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 
-	if (koopa->GetState() == PARAKOOPA_STATE_WALK || koopa->GetState() == PARAKOOPA_STATE_JUMP)
-	{
-		koopa->SetState(KOOPA_STATE_WALK);
-	}
-	else if (koopa->GetState() == KOOPA_STATE_WALK)
-	{
-		if (koopa->GetState() != KOOPA_STATE_SHELL)
-		{
-			koopa->SetState(KOOPA_STATE_SHELL);
-		}
-	}
-	else if (koopa->GetState() == KOOPA_STATE_RED_WALK)
-	{
-		if (koopa->GetState() != KOOPA_STATE_RED_SHELL)
-		{
-			koopa->SetState(KOOPA_STATE_RED_SHELL);
-		}
-	}
+	//if (koopa->GetState() == PARAKOOPA_STATE_WALK || koopa->GetState() == PARAKOOPA_STATE_JUMP)
+	//{
+	//	koopa->SetState(KOOPA_STATE_WALK);
+	//}
+	//else if (koopa->GetState() == KOOPA_STATE_WALK)
+	//{
+	//	if (koopa->GetState() != KOOPA_STATE_SHELL)
+	//	{
+	//		koopa->SetState(KOOPA_STATE_SHELL);
+	//	}
+	//}
+	//else if (koopa->GetState() == KOOPA_STATE_RED_WALK)
+	//{
+	//	if (koopa->GetState() != KOOPA_STATE_RED_SHELL)
+	//	{
+	//		koopa->SetState(KOOPA_STATE_RED_SHELL);
+	//	}
+	//}
+	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
+	if (x1 > x)
+		koopa->DieFromAttack(-1);
+	else
+		koopa->DieFromAttack(1);
 }
 
 
@@ -375,4 +408,24 @@ void CKoopa::SpinLeft() {
 
 void CKoopa::SpinRight() {
 	vx = -KOOPA_SPINNING_SPEED;
+}
+
+void CKoopa::DieFromAttack(int Direction)
+{
+	vx = KOOPA_VX_DIE_FROM_ATTACK * Direction;
+	vy = KOOPA_VY_DIE_FROM_ATTACK;
+	ay = KOOPA_GRAVITY;
+	if (state == KOOPA_STATE_RED_WALK || state == KOOPA_STATE_RED_WALK2 || state == KOOPA_STATE_RED_SPIN || state == KOOPA_STATE_RED_SHELL)
+	{
+		SetState(KOOPA_STATE_RED_DIE_FROM_ATTACK);
+	}
+	else
+	{
+		SetState(KOOPA_STATE_DIE_FROM_ATTACK);
+	}
+
+	LPGAMEOBJECT effectPoint = new CPoint(x, y - 16, 100);
+	LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+	LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+	p->AddEffect(effectPoint);
 }
