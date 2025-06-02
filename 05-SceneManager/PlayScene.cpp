@@ -22,6 +22,7 @@
 #include "Shadow.h"
 #include "HUD.h"
 #include "Point.h"
+#include "PSwitch.h"
 
 #include "SampleKeyEventHandler.h"
 #include "HUDManager.h"
@@ -257,6 +258,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 
+	case OBJECT_TYPE_PSWITCH:
+	{
+		obj = new CPSwitch(x, y);
+		break;
+	}
+
 	case OBJECT_TYPE_HUD:
 	{
 		int spriteId = (int)atoi(tokens[3].c_str());
@@ -277,6 +284,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
 	}
+
 
 	// General object setup
 	obj->SetPosition(x, y);

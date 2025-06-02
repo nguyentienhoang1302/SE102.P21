@@ -329,17 +329,6 @@ void CKoopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 
-	//if (goomba->GetState() == PARAGOOMBA_STATE_WALK || goomba->GetState() == PARAGOOMBA_STATE_JUMP)
-	//{
-	//	goomba->ParagoombaGetHit();
-	//}
-	//else if (goomba->GetState() == GOOMBA_STATE_WALKING)
-	//{
-	//	if (goomba->GetState() != GOOMBA_STATE_DIE)
-	//	{
-	//		goomba->SetState(GOOMBA_STATE_DIE);
-	//	}
-	//}
 	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
 	if (x1 > x)
 		goomba->DieFromAttack(-1);
@@ -351,24 +340,6 @@ void CKoopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 
-	//if (koopa->GetState() == PARAKOOPA_STATE_WALK || koopa->GetState() == PARAKOOPA_STATE_JUMP)
-	//{
-	//	koopa->SetState(KOOPA_STATE_WALK);
-	//}
-	//else if (koopa->GetState() == KOOPA_STATE_WALK)
-	//{
-	//	if (koopa->GetState() != KOOPA_STATE_SHELL)
-	//	{
-	//		koopa->SetState(KOOPA_STATE_SHELL);
-	//	}
-	//}
-	//else if (koopa->GetState() == KOOPA_STATE_RED_WALK)
-	//{
-	//	if (koopa->GetState() != KOOPA_STATE_RED_SHELL)
-	//	{
-	//		koopa->SetState(KOOPA_STATE_RED_SHELL);
-	//	}
-	//}
 	float x1 = CGame::GetInstance()->GetCurrentScene()->xMario;
 	if (x1 > x)
 		koopa->DieFromAttack(-1);

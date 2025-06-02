@@ -6,6 +6,7 @@
 #include "Coin.h"
 #include "Mushroom.h"
 #include "Leaf.h"
+#include "PSwitch.h"
 
 #define ID_ANI_MBLOCK 101000
 #define ID_ANI_MBLOCK_EMPTY 102000
@@ -31,7 +32,7 @@ protected:
 
 public:
 	CMBlock(float x, float y, int aniID, int content);
-	//content: 1-coin, 2-mushroom, 3-leaf, 4-greenmushroom
+	//content: 1-coin, 2-mushroom, 3-leaf, 4-greenmushroom, 5-PSwitch
 
 	virtual void SetState(int state);
 

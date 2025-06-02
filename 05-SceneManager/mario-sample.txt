@@ -25,3 +25,4 @@ height	240
 70	textures\map.png
 80	textures\HUD.png
 90	textures\effect.png
+100	textures\new.png

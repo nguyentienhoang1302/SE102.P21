@@ -80,6 +80,12 @@ void CMBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		subObject = new CMushroom(x, y, 2);
 		subObject->SetPosition(x, y - 16);
 	}
+	else if (content == 5)
+	{
+		subObject = new CPSwitch(x, y);
+		//subObject = new CMushroom(x, y, 2);
+		subObject->SetPosition(x, y - 16);
+	}
 
 	if (state == MBLOCK_STATE_EMPTY) {
 		y += vy * dt;

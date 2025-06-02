@@ -21,6 +21,7 @@
 #include "PlayScene.h"
 #include "HUD.h"
 #include "HUDManager.h"
+#include "PSwitch.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -170,6 +171,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopa(e);
 	else if (dynamic_cast<CLeaf*>(e->obj))
 		OnCollisionWithLeaf(e);
+	else if (dynamic_cast<CPSwitch*>(e->obj))
+		OnCollisionWithPSwitch(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -533,6 +536,14 @@ void CMario::OnCollisionWithLeaf(LPCOLLISIONEVENT e)
 	p->AddEffect(effectPoint);
 }
 
+void CMario::OnCollisionWithPSwitch(LPCOLLISIONEVENT e)
+{
+	CPSwitch* b = dynamic_cast<CPSwitch*>(e->obj);
+	if (e->ny < 0)
+	{
+		b->HandleClick();
+	}
+}
 //
 // Get animation ID for small Mario
 //
