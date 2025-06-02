@@ -18,6 +18,7 @@ class CPoint : public CGameObject {
 private:
 	int point;
 	float ay;
+	bool added = false;
 public:
 	CPoint(float x, float y, int point) : CGameObject(x, y) {
 		this->point = point;

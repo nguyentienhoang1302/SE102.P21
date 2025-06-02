@@ -56,14 +56,27 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
+	if (type == 1)
+	{
+		vy += ay * dt;
+		vx += ax * dt;
 
-	if (GetTickCount64() - timer > 500) {
-		ay = MUSHROOM_GRAVITY;
-		vx = -MUSHROOM_WALKING_SPEED;
+		if (GetTickCount64() - timer > 500) {
+			ay = MUSHROOM_GRAVITY;
+			vx = -MUSHROOM_WALKING_SPEED;
+		}
+		else y += vy * dt;
 	}
-	else y += vy * dt;
+	else if (type == 2)
+	{
+		vy += ay * dt;
+		vx += ax * dt;
+
+		if (GetTickCount64() - timer > 500) {
+			ay = MUSHROOM_GRAVITY;
+		}
+		else y += vy * dt;
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);

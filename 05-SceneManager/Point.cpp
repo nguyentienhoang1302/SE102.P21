@@ -1,4 +1,5 @@
 #include "Point.h"
+#include "HUDManager.h"
 
 void CPoint::Render()
 {
@@ -9,9 +10,19 @@ void CPoint::Render()
 	{
 	case 100:
 		sprites->Get(ID_ANI_POINT_100)->Draw(x, y);
+		if (added == false)
+		{
+			CHUDManager::GetInstance()->point = CHUDManager::GetInstance()->point + 100;
+			added = true;
+		}
 		break;
 	case 1000:
 		sprites->Get(ID_ANI_POINT_1000)->Draw(x, y);
+		if (added == false)
+		{
+			CHUDManager::GetInstance()->point = CHUDManager::GetInstance()->point + 1000;
+			added = true;
+		}
 		break;
 	case 10:
 		sprites->Get(ID_ANI_1UP)->Draw(x, y);

@@ -19,6 +19,8 @@
 #include "Collision.h"
 #include "SampleKeyEventHandler.h"
 #include "PlayScene.h"
+#include "HUD.h"
+#include "HUDManager.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -110,7 +112,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == MARIO_STATE_DIE && GetTickCount64() - die_start > 1500)
 	{
-		CGame::GetInstance()->RequestReload();
+		if (CHUDManager::GetInstance()->lifes <= 0)
+		{
+			// Set game over flag in the current scene
+			CPlayScene* scene = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+			if (scene) scene->isGameOver = true;
+			DebugOut(L"[INFO] GAME OVER");
+			return;
+		}
+		else
+		{
+			CGame::GetInstance()->RequestReload();
+		}
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -217,7 +230,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
-	coin++;
+	CHUDManager::GetInstance()->coins++;
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
@@ -231,8 +244,8 @@ void CMario::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	CMBlock* mysteryblock = (CMBlock*)(e->obj);
 	if (e->ny > 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
-		coin++;
 		if (mysteryblock->getContent() == 1) {
+			CHUDManager::GetInstance()->coins++;
 			float gx, gy;
 			mysteryblock->GetPosition(gx, gy);
 			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
@@ -951,6 +964,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_DIE:
+		CHUDManager::GetInstance()->lifes--;
 		die_start = GetTickCount64();
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;

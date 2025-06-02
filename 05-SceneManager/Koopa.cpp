@@ -5,6 +5,7 @@
 #include "Mario.h"
 #include "PlayScene.h"
 #include "Point.h"
+#include "HUDManager.h"
 
 CKoopa::CKoopa(float x, float y, int type) :CGameObject(x, y)
 {
@@ -393,6 +394,7 @@ void CKoopa::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
 	}
 	if (mysteryblock->getContent() == 1) {
+		CHUDManager::GetInstance()->coins++;
 		float gx, gy;
 		mysteryblock->GetPosition(gx, gy);
 		LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);

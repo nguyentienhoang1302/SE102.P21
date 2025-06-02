@@ -24,6 +24,7 @@
 #include "Point.h"
 
 #include "SampleKeyEventHandler.h"
+#include "HUDManager.h"
 
 using namespace std;
 
@@ -356,6 +357,30 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
+	//pause game update when game over, ask if player wants to restart
+	if (isGameOver)
+	{
+		int result = MessageBox(
+			NULL,
+			L"Game Over!\nDo you want to restart?",
+			L"Game Over",
+			MB_YESNO | MB_ICONQUESTION
+		);
+
+		if (result == IDYES) {
+			CHUDManager::GetInstance()->lifes = 4;
+			CHUDManager::GetInstance()->coins = 0;
+			CHUDManager::GetInstance()->point = 0;
+			CHUDManager::GetInstance()->timer = 300;
+			isGameOver = false;
+			CGame::GetInstance()->RequestReload();
+		}
+		else if (result == IDNO) {
+			exit(0);
+		}
+		return;
+	}
+
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
@@ -407,6 +432,9 @@ void CPlayScene::Update(DWORD dt)
 		HUD->Update(dt);
 	}
 
+	//update HUD
+	CHUDManager::GetInstance()->Update(dt, &objects);
+
 	CGame::GetInstance()->SetCamPos(cx - 8, cy);
 
 	PurgeDeletedObjects();
@@ -433,6 +461,9 @@ void CPlayScene::Render()
 			objects[i]->Render();
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i]->RenderPriority() == 4)
+			objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++)
+		if (objects[i]->RenderPriority() == 5)
 			objects[i]->Render();
 }
 

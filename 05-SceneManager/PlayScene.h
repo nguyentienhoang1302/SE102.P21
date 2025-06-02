@@ -26,7 +26,9 @@ protected:
 
 	void LoadAssets(LPCWSTR assetFile);
 	
-public: 
+public:
+	BOOLEAN isGameOver = false;
+
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
@@ -47,6 +49,7 @@ public:
 	vector<LPGAMEOBJECT>* GetObjects() { return &objects; }
 
 	void AddEffect(LPGAMEOBJECT obj);
+	int GetIdScene() { return this->id; }
 };
 
 typedef CPlayScene* LPPLAYSCENE;

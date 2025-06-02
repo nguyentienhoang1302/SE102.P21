@@ -18,5 +18,5 @@ protected:
 
 public:
 	CFireball(float x, float y, int direction); //direction: 1 - topleft, 2 - botleft, 3 - topright, 4 - botright
-	int RenderPriority() { return 2; }
+	int RenderPriority() { return 3; }
 };
