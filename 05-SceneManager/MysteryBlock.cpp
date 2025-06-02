@@ -77,7 +77,8 @@ void CMBlock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	else if (content == 4) {
-		subObject = new CMushroom(x, y, -16);
+		subObject = new CMushroom(x, y, 2);
+		subObject->SetPosition(x, y - 16);
 	}
 
 	if (state == MBLOCK_STATE_EMPTY) {

@@ -72,7 +72,7 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += ay * dt;
 		vx += ax * dt;
 
-		if (GetTickCount64() - timer > 500) {
+		if (GetTickCount64() - timer > 100) {
 			ay = MUSHROOM_GRAVITY;
 		}
 		else y += vy * dt;

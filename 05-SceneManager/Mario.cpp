@@ -258,16 +258,28 @@ void CMario::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
-	e->obj->Delete();
-	if (level == MARIO_LEVEL_SMALL)
+	int point = 0;
+	CMushroom* mushroom = (CMushroom*)(e->obj);
+	if (mushroom->GetType() == 1)
 	{
-		y -= 8;
-		level = MARIO_LEVEL_BIG;
-		StartUntouchable();
+		if (level == MARIO_LEVEL_SMALL)
+		{
+			y -= 8;
+			level = MARIO_LEVEL_BIG;
+			StartUntouchable();
+		}
+		point = 1000;
 	}
+	else if (mushroom->GetType() == 2)
+	{
+		CHUDManager::GetInstance()->lifes++;
+		point = 10; //1 up
+	}
+	e->obj->Delete();
+
 	float gx, gy;
 	e->obj->GetPosition(gx, gy);
-	LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 1000);
+	LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, point);
 	LPSCENE s = CGame::GetInstance()->GetCurrentScene();
 	LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
 	p->AddEffect(effectPoint);
