@@ -4,6 +4,8 @@
 #include "Goomba.h"
 #include "MysteryBlock.h"
 #include "Game.h"
+#include "PlayScene.h"
+#include "Point.h"
 
 void CTailHitbox::Render()
 {
@@ -69,6 +71,14 @@ void CTailHitbox::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	CMBlock* mysteryblock = (CMBlock*)(e->obj);
 	if (e->nx != 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
+	}
+	if (mysteryblock->getContent() == 1) {
+		float gx, gy;
+		mysteryblock->GetPosition(gx, gy);
+		LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+		p->AddEffect(effectPoint);
 	}
 	used = 1;
 }

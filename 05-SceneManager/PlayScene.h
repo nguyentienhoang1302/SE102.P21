@@ -38,6 +38,10 @@ public:
 
 	void Clear();
 	void PurgeDeletedObjects();
+	void Reload() {
+		Unload();
+		Load();
+	}
 
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 	vector<LPGAMEOBJECT>* GetObjects() { return &objects; }

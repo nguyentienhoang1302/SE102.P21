@@ -108,6 +108,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		subObject = NULL;
 	}
 
+	if (state == MARIO_STATE_DIE && GetTickCount64() - die_start > 1500)
+	{
+		CGame::GetInstance()->RequestReload();
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//DebugOut(L"[INFO] STATE: %d\n", state);
 }
@@ -946,6 +951,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_DIE:
+		die_start = GetTickCount64();
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;

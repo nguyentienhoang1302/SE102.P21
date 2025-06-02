@@ -60,6 +60,8 @@ class CGame
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 
+	bool reloadRequested = false;
+
 public:
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
@@ -113,9 +115,12 @@ public:
 	void Load(LPCWSTR gameFile);
 	void SwitchScene();
 	void InitiateSwitchScene(int scene_id);
+	void ReloadScene();
 
 	void _ParseSection_TEXTURES(string line);
 
+	void RequestReload() { reloadRequested = true; }
+	void ProcessReload();
 
 	~CGame();
 };

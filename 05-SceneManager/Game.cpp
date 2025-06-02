@@ -511,6 +511,7 @@ void CGame::Load(LPCWSTR gameFile)
 void CGame::SwitchScene()
 {
 	if (next_scene < 0 || next_scene == current_scene) return; 
+	//if (next_scene < 0) return;
 
 	DebugOut(L"[INFO] Switching to scene %d\n", next_scene);
 
@@ -531,6 +532,29 @@ void CGame::InitiateSwitchScene(int scene_id)
 	next_scene = scene_id;
 }
 
+void CGame::ReloadScene()
+{
+	DebugOut(L"Reload current scene");
+
+	if (scenes[current_scene] != NULL)
+		scenes[current_scene]->Unload();
+
+	CSprites::GetInstance()->Clear();
+	CAnimations::GetInstance()->Clear();
+
+	current_scene = next_scene;
+	LPSCENE s = scenes[next_scene];
+	this->SetKeyHandler(s->GetKeyEventHandler());
+	s->Load();
+}
+
+void CGame::ProcessReload() {
+	if (reloadRequested) {
+		CPlayScene* scene = dynamic_cast<CPlayScene*>(GetCurrentScene());
+		if (scene) scene->Reload();
+		reloadRequested = false;
+	}
+}
 
 void CGame::_ParseSection_TEXTURES(string line)
 {

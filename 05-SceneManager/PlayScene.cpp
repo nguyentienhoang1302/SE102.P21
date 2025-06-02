@@ -410,6 +410,9 @@ void CPlayScene::Update(DWORD dt)
 	CGame::GetInstance()->SetCamPos(cx - 8, cy);
 
 	PurgeDeletedObjects();
+
+	//check if reload is requested
+	CGame::GetInstance()->ProcessReload();
 }
 
 void CPlayScene::Render()
@@ -423,11 +426,14 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i]->RenderPriority() == 2)
 			objects[i]->Render();
+	if (player)
+		player->Render();
 	for (int i = 0; i < objects.size(); i++)
 		if (objects[i]->RenderPriority() == 3)
 			objects[i]->Render();
-	if (player)
-		player->Render();
+	for (int i = 0; i < objects.size(); i++)
+		if (objects[i]->RenderPriority() == 4)
+			objects[i]->Render();
 }
 
 /*
