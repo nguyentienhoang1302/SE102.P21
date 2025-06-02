@@ -950,7 +950,6 @@ void CMario::SetState(int state)
 			isSitting = true;
 			vx = 0; vy = 0.0f;
 			y +=MARIO_SIT_HEIGHT_ADJUST;
-			DebugOut(L"[INFO] SIT BEGIN\n");
 		}
 		break;
 
@@ -960,7 +959,6 @@ void CMario::SetState(int state)
 			isSitting = false;
 			state = MARIO_STATE_IDLE;
 			y -= MARIO_SIT_HEIGHT_ADJUST;
-			DebugOut(L"[INFO] SIT END\n");
 		}
 		break;
 

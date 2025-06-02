@@ -11,7 +11,8 @@ class CHUD : public CGameObject {
 	vector<LPGAMEOBJECT> coins;
 	vector<LPGAMEOBJECT> point;
 	vector<LPGAMEOBJECT> lifes;
-	vector<LPGAMEOBJECT> energy;
+	vector<LPGAMEOBJECT> speedbars;
+	LPGAMEOBJECT pMeter;
 	bool isInitUI;
 public:
 	CHUD(float x, float y, int spriteID) {

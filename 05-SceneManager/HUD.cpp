@@ -27,8 +27,34 @@ void CHUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		UpdateElements(point, CHUDManager::GetInstance()->point);
 		UpdateElements(lifes, CHUDManager::GetInstance()->lifes);
 	}
-	this->SetPosition(x, y);
+	
+	CPlayScene* p = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
+	CMario* mario = dynamic_cast<CMario*>(p->GetPlayer());
 
+	float vx = mario->Getvx();
+	float absVx = abs(vx);
+
+	int barCount = (int)((absVx / MARIO_RUNNING_SPEED) * 6);
+	barCount = min(barCount, 6);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (i < barCount)
+			dynamic_cast<CHUDNumber*>(speedbars[i])->SetIdSprite(500200);
+		else
+			dynamic_cast<CHUDNumber*>(speedbars[i])->SetIdSprite(500202);
+	}
+
+	if (barCount >= 6)
+	{
+		dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500201);
+	}
+	else
+	{
+		dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500204);
+	}
+
+	this->SetPosition(x, y);
 	CGameObject::Update(dt, coObjects);
 }
 
@@ -61,6 +87,15 @@ void CHUD::InitUI()
 		p->AddEffect(num);
 		lifes.push_back(num);
 	}
+	for (int i = 0; i < 6; i++)
+	{
+		LPGAMEOBJECT bar = new CHUDNumber(x, y);
+		p->AddEffect(bar);
+		speedbars.push_back(bar);
+	}
+	pMeter = new CHUDNumber(x, y);
+	dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500204);
+	p->AddEffect(pMeter);
 }
 
 void CHUD::UpdateElements(vector<LPGAMEOBJECT>& elements, DWORD value)
@@ -101,5 +136,13 @@ void CHUD::SetPosition(float x, float y)
 	for (int i = 0; i < lifes.size(); i++)
 	{
 		lifes[i]->SetPosition(x + i * 8 - 84, y - 4);
+	}
+	for (int i = 0; i < speedbars.size(); i++)
+	{
+		speedbars[i]->SetPosition(x + i * 8 - 60, y - 12);
+	}
+	if (pMeter != nullptr)
+	{
+		pMeter->SetPosition(x + 6 * 8 - 60 + 4, y - 12);
 	}
 }
