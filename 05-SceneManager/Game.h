@@ -62,6 +62,7 @@ class CGame
 
 	bool reloadRequested = false;
 	int savedMarioLevel = 1; // Used to save Mario's level when switching scenes
+	bool isFromSecretLevel = false;
 public:
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
@@ -124,6 +125,9 @@ public:
 
 	void SetSavedMarioLevel(int level) { savedMarioLevel = level;}
 	int GetSavedMarioLevel() { return savedMarioLevel; }
+
+	void SetIsFromSecretLevel(bool isFromSecret) { isFromSecretLevel = isFromSecret; }
+	bool GetIsFromSecretLevel() { return isFromSecretLevel; }
 
 	~CGame();
 };

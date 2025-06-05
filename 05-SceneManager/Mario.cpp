@@ -127,6 +127,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	//Set Mario position after he come back from secret stage
+	if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 6)
+	{
+		CGame::GetInstance()->SetIsFromSecretLevel(true);
+	}
+
+	if (CGame::GetInstance()->GetIsFromSecretLevel() && CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5)
+	{
+		this->SetPosition(2264 + 32, -110);
+		CGame::GetInstance()->SetIsFromSecretLevel(false);
+	}
+
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 	//DebugOut(L"[INFO] STATE: %d\n", state);
 }
@@ -239,7 +251,7 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
-	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN) || state == MARIO_STATE_JUMP)
+	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN))
 	{
 		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
 		CGame::GetInstance()->SetSavedMarioLevel(this->GetLevel());
