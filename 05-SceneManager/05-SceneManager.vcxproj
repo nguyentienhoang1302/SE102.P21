@@ -159,6 +159,8 @@
     <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GiftBox.cpp" />
+    <ClCompile Include="GiftSelect.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="HUDManager.cpp" />
@@ -201,6 +203,8 @@
     <ClInclude Include="Fireball.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GiftBox.h" />
+    <ClInclude Include="GiftSelect.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="HUDManager.h" />

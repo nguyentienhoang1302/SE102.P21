@@ -27,6 +27,15 @@ void CPoint::Render()
 	case 10:
 		sprites->Get(ID_ANI_1UP)->Draw(x, y);
 		break;
+	case 1:
+		ani->Get(ID_ANI_MUSHROOM_EF)->Render(x, y);
+		break;
+	case 2:
+		ani->Get(ID_ANI_STAR_EF)->Render(x, y);
+		break;
+	case 3:
+		ani->Get(ID_ANI_FLOWER_EF)->Render(x, y);
+		break;
 	}
 	//RenderBoundingBox();
 }

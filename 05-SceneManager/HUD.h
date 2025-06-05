@@ -13,6 +13,8 @@ class CHUD : public CGameObject {
 	vector<LPGAMEOBJECT> lifes;
 	vector<LPGAMEOBJECT> speedbars;
 	LPGAMEOBJECT pMeter;
+	LPGAMEOBJECT gift;
+	
 	bool isInitUI;
 public:
 	CHUD(float x, float y, int spriteID) {

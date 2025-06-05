@@ -53,6 +53,20 @@ void CHUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500204);
 	}
 
+	int collectedGift = CHUDManager::GetInstance()->collectedGift;
+	if (collectedGift == 1)
+	{
+		dynamic_cast<CHUDNumber*>(gift)->SetIdSprite(500302);
+	}
+	else if (collectedGift == 2)
+	{
+		dynamic_cast<CHUDNumber*>(gift)->SetIdSprite(500303);
+	}
+	else if (collectedGift == 3)
+	{
+		dynamic_cast<CHUDNumber*>(gift)->SetIdSprite(500301);
+	}
+
 	this->SetPosition(x, y);
 	CGameObject::Update(dt, coObjects);
 }
@@ -92,9 +106,14 @@ void CHUD::InitUI()
 		p->AddEffect(bar);
 		speedbars.push_back(bar);
 	}
+
 	pMeter = new CHUDNumber(x, y);
 	dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500204);
 	p->AddEffect(pMeter);
+
+	gift = new CHUDNumber(x, y);
+	dynamic_cast<CHUDNumber*>(gift)->SetIdSprite(500300);
+	p->AddEffect(gift);
 }
 
 void CHUD::UpdateElements(vector<LPGAMEOBJECT>& elements, DWORD value)
@@ -143,5 +162,9 @@ void CHUD::SetPosition(float x, float y)
 	if (pMeter != nullptr)
 	{
 		pMeter->SetPosition(x + 6 * 8 - 60 + 4, y - 12);
+	}
+	if (gift != nullptr)
+	{
+		gift->SetPosition(x + 56, y - 8);
 	}
 }

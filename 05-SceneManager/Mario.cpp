@@ -23,6 +23,7 @@
 #include "HUDManager.h"
 #include "PSwitch.h"
 #include "Pipe.h"
+#include "GiftSelect.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -240,6 +241,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithLeaf(e);
 	else if (dynamic_cast<CPSwitch*>(e->obj))
 		OnCollisionWithPSwitch(e);
+	else if (dynamic_cast<CGiftSelect*>(e->obj))
+		OnCollisionWithGiftSelect(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -619,6 +622,32 @@ void CMario::OnCollisionWithPSwitch(LPCOLLISIONEVENT e)
 		b->HandleClick();
 	}
 }
+
+void CMario::OnCollisionWithGiftSelect(LPCOLLISIONEVENT e)
+{
+	CGiftSelect* gift = (CGiftSelect*)(e->obj);
+	if (gift->GetState() == GSELECT_STATE_1)
+	{
+		CHUDManager::GetInstance()->collectedGift = 1;
+	}
+	else if (gift->GetState() == GSELECT_STATE_2)
+	{
+		CHUDManager::GetInstance()->collectedGift = 2;
+	}
+	else if (gift->GetState() == GSELECT_STATE_3)
+	{
+		CHUDManager::GetInstance()->collectedGift = 3;
+	}
+	e->obj->Delete();
+
+	float gx, gy;
+	e->obj->GetPosition(gx, gy);
+	LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, CHUDManager::GetInstance()->collectedGift);
+	LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+	LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+	p->AddEffect(effectPoint);
+}
+
 //
 // Get animation ID for small Mario
 //

@@ -17,6 +17,7 @@ public:
 	int lifes;
 	int coins;
 	float elapsedTime;
+	int collectedGift;
 	static CHUDManager* GetInstance();
 	CHUDManager(float x = 0, float y = 0) : CGameObject(x, y)
 	{
@@ -24,6 +25,7 @@ public:
 		timer = 300;
 		elapsedTime = 0;
 		lifes = 4;
+		collectedGift = 0;
 	}
 	void Render() {}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

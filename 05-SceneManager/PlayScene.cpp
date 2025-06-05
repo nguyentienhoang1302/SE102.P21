@@ -23,6 +23,8 @@
 #include "HUD.h"
 #include "Point.h"
 #include "PSwitch.h"
+#include "GiftBox.h"
+#include "GiftSelect.h"
 
 #include "SampleKeyEventHandler.h"
 #include "HUDManager.h"
@@ -284,6 +286,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 		break;
 	}
+
+	case OBJECT_TYPE_GIFTBOX:
+	{
+		int aniId = (int)atoi(tokens[3].c_str());
+		obj = new CGiftBox(x, y, aniId);
+		break;
+	}
+
+	case OBJECT_TYPE_GIFTSELECT: obj = new CGiftSelect(x, y); break;
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);

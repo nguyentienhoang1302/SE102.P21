@@ -27,3 +27,4 @@ height	240
 80	textures\HUD.png
 90	textures\effect.png
 100	textures\new.png
+110	textures\giftbox.png
