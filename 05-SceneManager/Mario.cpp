@@ -22,6 +22,7 @@
 #include "HUD.h"
 #include "HUDManager.h"
 #include "PSwitch.h"
+#include "Pipe.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -129,6 +130,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//Entering pipe and switch scene
 	if (isEnteringPipe)
 	{
+		vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+		for (size_t i = 0; i < objects->size(); i++)
+		{
+			CPipe* pipe = dynamic_cast<CPipe*>(objects->at(i));
+			if (pipe != nullptr) pipe->setRenderPriority(3);
+		}
 		if (GetTickCount64() - pipe_timer > MARIO_PIPE_TIME)
 		{
 			isEnteringPipe = false;
@@ -147,6 +154,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//Exiting pipe
 	if (isExitingPipe)
 	{
+		vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+		for (size_t i = 0; i < objects->size(); i++)
+		{
+			CPipe* pipe = dynamic_cast<CPipe*>(objects->at(i));
+			if (pipe != nullptr) pipe->setRenderPriority(3);
+
+		}
 		if (GetTickCount64() - pipe_timer > MARIO_PIPE_TIME)
 		{
 			isExitingPipe = false;
@@ -154,6 +168,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = -0.03f;
 		y += vy * dt;
 		return;
+	}
+
+	//Reset pipe render priority after mario enter and exit pipe
+	if (!isExitingPipe || !isEnteringPipe)
+	{
+		vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+		for (size_t i = 0; i < objects->size(); i++)
+		{
+			CPipe* pipe = dynamic_cast<CPipe*>(objects->at(i));
+			if (pipe != nullptr) pipe->setRenderPriority(2);
+
+		}
 	}
 
 	//Set Mario position after he come back from secret stage
@@ -1092,12 +1118,6 @@ void CMario::SetState(int state)
 		ax = 0.0f;
 		if (level == MARIO_LEVEL_RACCOON)
 		{
-			// If there is an old hitbox, delete it first
-			if (subObject != nullptr && !subObject->IsDeleted())
-			{
-				subObject->Delete();
-				subObject = nullptr;
-			}
 			tailAttack_start = GetTickCount64();
 			float marioX, marioY;
 			GetPosition(marioX, marioY);
