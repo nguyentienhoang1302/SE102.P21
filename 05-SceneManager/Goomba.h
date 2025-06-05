@@ -40,11 +40,15 @@
 class CGoomba : public CGameObject
 {
 protected:
+	float start_x;
+	float start_y;
 	float ax;				
 	float ay;
 	int type;
 	int lowjumpcount;
 	bool wingless = false;
+	bool isActivated = false;
+	bool isOutOfRange = false;
 
 	ULONGLONG die_start;
 	ULONGLONG walk_start;

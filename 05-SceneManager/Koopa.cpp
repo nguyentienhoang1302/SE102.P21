@@ -11,6 +11,8 @@ CKoopa::CKoopa(float x, float y, int type) :CGameObject(x, y)
 {
 	this->type = type;
 	SetState(KOOPA_STATE_WAIT);
+	this->start_x = x;
+	this->start_y = y;
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -169,7 +171,62 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		y -= (KOOPA_BBOX_HEIGHT - KOOPA_BBOX_HEIGHT_SHELL) / 2;
 	}
 
-	if (state == KOOPA_STATE_WAIT && CGame::GetInstance()->GetCurrentScene()->xMario + 180 >= this->x)
+	float cam_x, cam_y;
+	CGame::GetInstance()->GetCamPos(cam_x, cam_y);
+
+	float cam_width = 270;
+	float cam_height = 287;
+
+	float cam_center_x = cam_x + cam_width / 2;
+	float cam_center_y = cam_y + cam_height / 2;
+
+	//active zone
+	float active_left = start_x - 200;
+	float active_right = start_x + 200;
+	float active_top = start_y - 200;
+	float active_bottom = start_y + 200;
+
+	bool isCameraNearStart =
+		(cam_center_x >= active_left && cam_center_x <= active_right &&
+			cam_center_y >= active_top && cam_center_y <= active_bottom);
+
+	//is koopa in camera?
+	float cam_right = cam_x + cam_width;
+	float cam_bottom = cam_y + cam_height;
+	bool isInCamera = !(x + KOOPA_BBOX_WIDTH / 2 < cam_x ||
+		x - KOOPA_BBOX_WIDTH / 2 > cam_right ||
+		y + KOOPA_BBOX_HEIGHT / 2 < cam_y ||
+		y - KOOPA_BBOX_HEIGHT / 2 > cam_bottom);
+
+	if (!isCameraNearStart && !isInCamera) // camera too far
+	{
+		isActivated = false;
+		isOutOfRange = true;
+
+		this->x = start_x;
+		this->y = start_y;
+		SetState(KOOPA_STATE_WAIT);
+		vx = 0;
+		vy = 0;
+		return;
+	}
+	else // camera is near
+	{
+		if (isOutOfRange && !isInCamera)
+		{
+			this->x = start_x;
+			this->y = start_y;
+			SetState(KOOPA_STATE_WAIT);
+			vx = 0;
+			vy = 0;
+			isOutOfRange = false;
+			return;
+		}
+
+		isActivated = true;
+	}
+
+	if(state == KOOPA_STATE_WAIT && isActivated)
 	{
 		this->ax = 0;
 		this->ay = KOOPA_GRAVITY;

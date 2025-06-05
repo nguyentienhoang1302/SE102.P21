@@ -1,6 +1,7 @@
 #include "PiranhaPlant.h"
 #include "Game.h"
 #include "Fireball.h"
+#include "PlayScene.h"
 
 CPPlant::CPPlant(float x, float y, int type) :CGameObject(x, y)
 {
@@ -22,6 +23,8 @@ CPPlant::CPPlant(float x, float y, int type) :CGameObject(x, y)
 		y0 = y + 6;
 		timer = 0;
 	}
+	this->start_x = x;
+	this->start_y = y;
 }
 
 void CPPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -70,7 +73,62 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		if (state == FIREPIRANHAPLANT_STATE_WAIT && CGame::GetInstance()->GetCurrentScene()->xMario + 180 >= this->x)
+		float cam_x, cam_y;
+		CGame::GetInstance()->GetCamPos(cam_x, cam_y);
+
+		float cam_width = 270;
+		float cam_height = 287;
+
+		float cam_center_x = cam_x + cam_width / 2;
+		float cam_center_y = cam_y + cam_height / 2;
+
+		//active zone
+		float active_left = start_x - 200;
+		float active_right = start_x + 200;
+		float active_top = start_y - 200;
+		float active_bottom = start_y + 200;
+
+		bool isCameraNearStart =
+			(cam_center_x >= active_left && cam_center_x <= active_right &&
+				cam_center_y >= active_top && cam_center_y <= active_bottom);
+
+		//is in camera?
+		float cam_right = cam_x + cam_width;
+		float cam_bottom = cam_y + cam_height;
+		bool isInCamera = !(x + FIREPIRANHAPLANT_BBOX_WIDTH / 2 < cam_x ||
+			x - FIREPIRANHAPLANT_BBOX_WIDTH / 2 > cam_right ||
+			y + FIREPIRANHAPLANT_BBOX_HEIGHT_RED / 2 < cam_y ||
+			y - FIREPIRANHAPLANT_BBOX_HEIGHT_RED / 2 > cam_bottom);
+
+		if (!isCameraNearStart && !isInCamera) // camera too far
+		{
+			isActivated = false;
+			isOutOfRange = true;
+
+			this->x = start_x;
+			this->y = start_y;
+			SetState(FIREPIRANHAPLANT_STATE_WAIT);
+			vx = 0;
+			vy = 0;
+			return;
+		}
+		else // camera is near
+		{
+			if (isOutOfRange && !isInCamera)
+			{
+				this->x = start_x;
+				this->y = start_y;
+				SetState(FIREPIRANHAPLANT_STATE_WAIT);
+				vx = 0;
+				vy = 0;
+				isOutOfRange = false;
+				return;
+			}
+
+			isActivated = true;
+		}
+
+		if (state == FIREPIRANHAPLANT_STATE_WAIT && isActivated)
 		{
 			SetState(FIREPIRANHAPLANT_STATE_TL);
 			isStart = true;

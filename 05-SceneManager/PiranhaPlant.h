@@ -36,11 +36,14 @@ class CPPlant : public CGameObject
 {
 protected:
 	ULONGLONG timer;
-
+	float start_x;
+	float start_y;
 	float y0;
 	int type;
 	bool isShooting = false;
 	bool isStart = false;
+	bool isActivated = false;
+	bool isOutOfRange = false;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
