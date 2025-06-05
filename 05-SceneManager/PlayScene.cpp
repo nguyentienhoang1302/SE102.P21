@@ -121,16 +121,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+	{
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
+		// Get Mario level in case of switching from another scene, default level is small
+		int savedLevel = CGame::GetInstance()->GetSavedMarioLevel();
+		obj = new CMario(x, y);
+		((CMario*)obj)->SetLevel(savedLevel);
+		player = (CMario*)obj;
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+	}
 	case OBJECT_TYPE_GOOMBA:
 	{
 		int type = (int)atoi(tokens[3].c_str());

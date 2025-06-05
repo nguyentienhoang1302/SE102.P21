@@ -61,7 +61,7 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 	bool reloadRequested = false;
-
+	int savedMarioLevel = 1; // Used to save Mario's level when switching scenes
 public:
 	// Init DirectX, Sprite Handler
 	void Init(HWND hWnd, HINSTANCE hInstance);
@@ -121,6 +121,9 @@ public:
 
 	void RequestReload() { reloadRequested = true; }
 	void ProcessReload();
+
+	void SetSavedMarioLevel(int level) { savedMarioLevel = level;}
+	int GetSavedMarioLevel() { return savedMarioLevel; }
 
 	~CGame();
 };

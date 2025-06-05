@@ -242,6 +242,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN) || state == MARIO_STATE_JUMP)
 	{
 		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+		CGame::GetInstance()->SetSavedMarioLevel(this->GetLevel());
 	}
 }
 
