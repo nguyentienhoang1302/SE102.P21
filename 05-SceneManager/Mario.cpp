@@ -275,6 +275,7 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
 	CHUDManager::GetInstance()->coins++;
+	CHUDManager::GetInstance()->point = CHUDManager::GetInstance()->point + 50;
 }
 
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)

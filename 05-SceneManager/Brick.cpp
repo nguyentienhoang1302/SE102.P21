@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Game.h"
 #include "PlayScene.h"
+#include "HUDManager.h"
 
 void CBrick::Render()
 {
@@ -31,6 +32,7 @@ void CBrick::Break()
 {
 	if (this->IsBreakable())
 	{
+		CHUDManager::GetInstance()->point = CHUDManager::GetInstance()->point + 50;
 		this->Delete();
 		//Create 4 debris
 		for (int i = 0; i < 4; i++) {
