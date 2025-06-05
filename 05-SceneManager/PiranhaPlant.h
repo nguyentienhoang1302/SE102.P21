@@ -36,8 +36,6 @@ class CPPlant : public CGameObject
 {
 protected:
 	ULONGLONG timer;
-	float start_x;
-	float start_y;
 	float y0;
 	int type;
 	bool isShooting = false;

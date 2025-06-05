@@ -23,8 +23,6 @@ CPPlant::CPPlant(float x, float y, int type) :CGameObject(x, y)
 		y0 = y + 6;
 		timer = 0;
 	}
-	this->start_x = x;
-	this->start_y = y;
 }
 
 void CPPlant::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -83,10 +81,10 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float cam_center_y = cam_y + cam_height / 2;
 
 		//active zone
-		float active_left = start_x - 200;
-		float active_right = start_x + 200;
-		float active_top = start_y - 200;
-		float active_bottom = start_y + 200;
+		float active_left = x - 200;
+		float active_right = x + 200;
+		float active_top = y - 200;
+		float active_bottom = y + 200;
 
 		bool isCameraNearStart =
 			(cam_center_x >= active_left && cam_center_x <= active_right &&
@@ -105,8 +103,6 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isActivated = false;
 			isOutOfRange = true;
 
-			this->x = start_x;
-			this->y = start_y;
 			SetState(FIREPIRANHAPLANT_STATE_WAIT);
 			vx = 0;
 			vy = 0;
@@ -116,8 +112,6 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (isOutOfRange && !isInCamera)
 			{
-				this->x = start_x;
-				this->y = start_y;
 				SetState(FIREPIRANHAPLANT_STATE_WAIT);
 				vx = 0;
 				vy = 0;
@@ -162,7 +156,7 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (x1 > x && y1 < y) {
 				SetState(FIREPIRANHAPLANT_STATE_TR);
 			}
-			else if (x1 > x && y1 > 1) {
+			else if (x1 > x && y1 > y) {
 				SetState(FIREPIRANHAPLANT_STATE_BR);
 			}
 			CGameObject::Update(dt, coObjects);
