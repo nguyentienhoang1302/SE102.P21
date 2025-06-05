@@ -941,9 +941,9 @@ void CMario::Render()
 		animations->Get(aniId)->Render(x, y);
 	}
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	DebugOutTitle(L"Super Mario Bros 3");
 }
 
 void CMario::SetState(int state)
@@ -952,11 +952,7 @@ void CMario::SetState(int state)
 	if (this->state == MARIO_STATE_DIE) return; 
 
 	// Prevent state changes during the tail attack
-	if (this->state == MARIO_STATE_TAIL_ATTACK && GetTickCount64() - tailAttack_start < MARIO_TAIL_ATTACK_TIME)
-	{
-		//DebugOut(L"[INFO] ATTACKING\n");
-		return;
-	}
+	if (this->state == MARIO_STATE_TAIL_ATTACK && GetTickCount64() - tailAttack_start < MARIO_TAIL_ATTACK_TIME) return;
 
 	switch (state)
 	{
@@ -994,13 +990,11 @@ void CMario::SetState(int state)
 				vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
-
 	case MARIO_STATE_RELEASE_JUMP:
 		ay = MARIO_GRAVITY;
 		isFlying = false;
 		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
-
 	case MARIO_STATE_SIT:
 		if (isOnPlatform && level != MARIO_LEVEL_SMALL && heldKoopa == nullptr)
 		{
@@ -1010,7 +1004,6 @@ void CMario::SetState(int state)
 			y +=MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
 	case MARIO_STATE_SIT_RELEASE:
 		if (isSitting)
 		{
@@ -1019,7 +1012,6 @@ void CMario::SetState(int state)
 			y -= MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		vx = 0.0f;
@@ -1028,9 +1020,7 @@ void CMario::SetState(int state)
 			isHovering = false;
 		}
 		isFlying = false;
-		//DebugOut(L"[INFO] IDLE BEGIN\n");
 		break;
-
 	case MARIO_STATE_DIE:
 		CHUDManager::GetInstance()->lifes--;
 		die_start = GetTickCount64();
@@ -1074,7 +1064,6 @@ void CMario::SetState(int state)
 			}
 		}
 		break;
-
 	case MARIO_STATE_RELEASE_SHELL:
 		if (heldKoopa != nullptr)
 		{
@@ -1099,7 +1088,6 @@ void CMario::SetState(int state)
 		}
 		break;
 	case MARIO_STATE_TAIL_ATTACK:
-		//ax = 0;
 		if (level == MARIO_LEVEL_RACCOON)
 		{
 			// If there is an old hitbox, delete it first
@@ -1108,7 +1096,6 @@ void CMario::SetState(int state)
 				subObject->Delete();
 				subObject = nullptr;
 			}
-			state = MARIO_STATE_TAIL_ATTACK;
 			tailAttack_start = GetTickCount64();
 			float marioX, marioY;
 			GetPosition(marioX, marioY);
@@ -1124,7 +1111,6 @@ void CMario::SetState(int state)
 				subObject->SetSpeed(-0.12f, 0);
 			}
 			CreateSubObject = true;
-			//DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer
 		}
 		break;
 	case MARIO_STATE_PIPE_ENTER:
@@ -1136,7 +1122,6 @@ void CMario::SetState(int state)
 		isExitingPipe = true;
 		break;
 	}
-
 	CGameObject::SetState(state);
 }
 

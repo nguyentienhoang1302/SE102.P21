@@ -29,7 +29,6 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		else if (mario->GetLevel() == MARIO_LEVEL_RACCOON && !mario->isOnPlatform)
 		{
 			mario->SetState(MARIO_STATE_HOVER);
-			//mario->SetState(MARIO_STATE_FLY);
 		}
 		break;
 	case DIK_1:
@@ -97,11 +96,6 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		{
 			mario->SetState(MARIO_STATE_RELEASE_SHELL);
 		}
-		//if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
-		//{
-		//	mario->SetState(MARIO_STATE_TAIL_ATTACK);
-		//	break;
-		//}
 		break;
 	}
 

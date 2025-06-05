@@ -47,7 +47,6 @@
 
 #define MARIO_STATE_PIPE_ENTER 1000
 #define MARIO_STATE_PIPE_EXIT 1001
-//#define MARIO_STATE_PIPE 1000
 
 #pragma region ANIMATION_ID
 //BIG MARIO
@@ -187,8 +186,6 @@ class CMario : public CGameObject
 	ULONGLONG pipe_timer = -1;
 	int pipe_scene_id = -1;
 
-	int coin; 
-
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
@@ -223,7 +220,6 @@ public:
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
-		coin = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();

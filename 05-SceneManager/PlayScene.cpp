@@ -432,7 +432,7 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 	
-	//limit camera movement in each stage
+	// Limit camera movement in each stage
 	if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5)
 	{
 		if (cx < 0) cx = 0;
@@ -447,21 +447,21 @@ void CPlayScene::Update(DWORD dt)
 		cy = 0;
 	}
 
-	//set HUD position after camera position
+	// Set HUD position after camera position
 	if (HUD != NULL)
 	{
 		HUD->SetPosition(cx+120, cy + 227);
 		HUD->Update(dt);
 	}
 
-	//update HUD
+	// Update HUD
 	CHUDManager::GetInstance()->Update(dt, &objects);
 
 	CGame::GetInstance()->SetCamPos(cx - 8, cy);
 
 	PurgeDeletedObjects();
 
-	//check if reload is requested
+	// Check if reload is requested
 	CGame::GetInstance()->ProcessReload();
 }
 

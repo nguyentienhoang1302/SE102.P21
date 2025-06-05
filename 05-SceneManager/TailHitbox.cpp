@@ -10,7 +10,7 @@
 
 void CTailHitbox::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 CTailHitbox::CTailHitbox(float x, float y)
@@ -72,15 +72,15 @@ void CTailHitbox::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
 	CMBlock* mysteryblock = (CMBlock*)(e->obj);
 	if (e->nx != 0 && mysteryblock->GetState() == MBLOCK_STATE_DEFAULT) {
 		mysteryblock->SetState(MBLOCK_STATE_EMPTY);
-	}
-	if (mysteryblock->getContent() == 1) {
-		CHUDManager::GetInstance()->coins++;
-		float gx, gy;
-		mysteryblock->GetPosition(gx, gy);
-		LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
-		LPSCENE s = CGame::GetInstance()->GetCurrentScene();
-		LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
-		p->AddEffect(effectPoint);
+		if (mysteryblock->getContent() == 1) {
+			CHUDManager::GetInstance()->coins++;
+			float gx, gy;
+			mysteryblock->GetPosition(gx, gy);
+			LPGAMEOBJECT effectPoint = new CPoint(gx, gy - 16, 100);
+			LPSCENE s = CGame::GetInstance()->GetCurrentScene();
+			LPPLAYSCENE p = dynamic_cast<CPlayScene*>(s);
+			p->AddEffect(effectPoint);
+		}
 	}
 	used = 1;
 }

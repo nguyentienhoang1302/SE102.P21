@@ -7,21 +7,6 @@ void CHUD::Render()
 {
 	CSprites* s = CSprites::GetInstance();
 	s->Get(this->spriteID)->Draw(x, y);
-	//// P flashing effect when max speed
-	//CPlayScene* p = dynamic_cast<CPlayScene*>(CGame::GetInstance()->GetCurrentScene());
-	//CMario* mario = dynamic_cast<CMario*>(p->GetPlayer());
-	//float vx = mario->Getvx();
-	//float absVx = abs(vx);
-	//int barCount = (int)((absVx / MARIO_RUNNING_SPEED) * 6);
-	//if (barCount >= 6)
-	//{
-	//	// Flash: only render on even frames (adjust as needed)
-	//	if ((GetTickCount64() / 100) % 2 == 0)
-	//	{
-	//		pMeter->Render();
-	//	}
-	//}
-	//RenderBoundingBox();
 }
 
 void CHUD::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -61,7 +46,7 @@ void CHUD::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (barCount >= 6 && (GetTickCount64() / 100) % 2 == 0)
 	{
-		dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500201);
+		dynamic_cast<CHUDNumber*>(pMeter)->SetIdSprite(500201); //P flashing effect
 	}
 	else
 	{

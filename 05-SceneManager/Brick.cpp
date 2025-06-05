@@ -32,7 +32,7 @@ void CBrick::Break()
 	if (this->IsBreakable())
 	{
 		this->Delete();
-		// Tạo 4 mảnh gạch vỡ
+		//Create 4 debris
 		for (int i = 0; i < 4; i++) {
 			float frag_vx = (i < 2 ? -1 : 1) * DEBRIS_SPEED_X;
 			float frag_vy = (i % 2 == 0 ? -1 : 1) * DEBRIS_SPEED_Y;
