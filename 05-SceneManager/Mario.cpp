@@ -1089,6 +1089,7 @@ void CMario::SetState(int state)
 		}
 		break;
 	case MARIO_STATE_TAIL_ATTACK:
+		ax = 0.0f;
 		if (level == MARIO_LEVEL_RACCOON)
 		{
 			// If there is an old hitbox, delete it first
