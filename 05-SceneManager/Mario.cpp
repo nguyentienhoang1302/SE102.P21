@@ -239,7 +239,10 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
-	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN) || state == MARIO_STATE_JUMP)
+	{
+		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+	}
 }
 
 void CMario::OnCollisionWithMBlock(LPCOLLISIONEVENT e)
@@ -880,19 +883,6 @@ void CMario::Render()
 
 		animations->Get(aniId)->Render(x, y);
 	}
-	//CAnimations* animations = CAnimations::GetInstance();
-	//int aniId = -1;
-
-	//if (state == MARIO_STATE_DIE)
-	//	aniId = ID_ANI_MARIO_DIE;
-	//else if (level == MARIO_LEVEL_BIG)
-	//	aniId = GetAniIdBig();
-	//else if (level == MARIO_LEVEL_SMALL)
-	//	aniId = GetAniIdSmall();
-	//else if (level == MARIO_LEVEL_RACCOON)
-	//	aniId = GetAniIdRaccoon();
-
-	//animations->Get(aniId)->Render(x, y);
 
 	RenderBoundingBox();
 	

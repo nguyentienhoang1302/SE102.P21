@@ -427,11 +427,20 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 	
-	//limit camera movement
-	if (cx < 0) cx = 0;
-	if (cx > 2560) cx = 2560;
-	if (cy > 0) cy = 0;
-	if (cy < -208) cy = -208;
+	//limit camera movement in each stage
+	if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5)
+	{
+		if (cx < 0) cx = 0;
+		if (cx > 2560) cx = 2560;
+		if (cy > 0) cy = 0;
+		if (cy < -208) cy = -208;
+	}
+	else if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 6)
+	{
+		if (cx < 0) cx = 0;
+		if (cx > 504) cx = 504;
+		cy = 0;
+	}
 
 	//set HUD position after camera position
 	if (HUD != NULL)
