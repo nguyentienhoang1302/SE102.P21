@@ -45,7 +45,12 @@
 
 #define MARIO_STATE_TAIL_ATTACK 900
 
+#define MARIO_STATE_PIPE_ENTER 1000
+#define MARIO_STATE_PIPE_EXIT 1001
+//#define MARIO_STATE_PIPE 1000
+
 #pragma region ANIMATION_ID
+//BIG MARIO
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
 #define ID_ANI_MARIO_IDLE_LEFT 401
@@ -75,6 +80,8 @@
 #define ID_ANI_MARIO_HOLD_SHELL_RIGHT_IDLE 1011
 #define ID_ANI_MARIO_HOLD_SHELL_LEFT_IDLE 1012
 
+#define ID_ANI_MARIO_PIPE 1030
+
 // SMALL MARIO
 #define ID_ANI_MARIO_SMALL_IDLE_RIGHT 1100
 #define ID_ANI_MARIO_SMALL_IDLE_LEFT 1102
@@ -98,6 +105,8 @@
 #define ID_ANI_MARIO_SMALL_HOLD_SHELL_LEFT 1802
 #define ID_ANI_MARIO_SMALL_HOLD_SHELL_RIGHT_IDLE 1701
 #define ID_ANI_MARIO_SMALL_HOLD_SHELL_LEFT_IDLE 1702
+
+#define ID_ANI_MARIO_SMALL_PIPE 1031
 
 // RACCOON MARIO
 #define ID_ANI_MARIO_RACCOON_IDLE_RIGHT 2001
@@ -131,6 +140,8 @@
 
 #define ID_ANI_MARIO_RACCOON_TAIL_ATTACK 3000
 
+#define ID_ANI_MARIO_RACCOON_PIPE 1032
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -158,6 +169,7 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_TAIL_ATTACK_TIME 200
+#define MARIO_PIPE_TIME 1000
 
 class CMario : public CGameObject
 {
@@ -172,6 +184,8 @@ class CMario : public CGameObject
 	ULONGLONG tailAttack_start = -1;
 	ULONGLONG heldKoopa_start = -1;
 	ULONGLONG die_start = -1;
+	ULONGLONG pipe_timer = -1;
+	int pipe_scene_id = -1;
 
 	int coin; 
 
@@ -195,6 +209,8 @@ public:
 	BOOLEAN isOnPlatform;
 	BOOLEAN isFlying = false;
 	BOOLEAN isHovering = false;
+	BOOLEAN isEnteringPipe = false;
+	BOOLEAN isExitingPipe = false;
 	CKoopa* heldKoopa = nullptr;
 	CMario(float x, float y) : CGameObject(x, y)
 	{

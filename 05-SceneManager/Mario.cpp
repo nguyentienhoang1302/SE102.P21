@@ -126,6 +126,35 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CGame::GetInstance()->RequestReload();
 		}
 	}
+	//Entering pipe and switch scene
+	if (isEnteringPipe)
+	{
+		if (GetTickCount64() - pipe_timer > MARIO_PIPE_TIME)
+		{
+			isEnteringPipe = false;
+			CGame::GetInstance()->InitiateSwitchScene(pipe_scene_id);
+		}
+		if(CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5 && CGame::GetInstance()->GetIsFromSecretLevel() == false)
+			vy = 0.03f;
+		else if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5 && CGame::GetInstance()->GetIsFromSecretLevel() == true)
+			vy = -0.03f;
+		else if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 6)
+			vy = -0.03f;
+		y += vy * dt;
+		return;
+	}
+
+	//Exiting pipe
+	if (isExitingPipe)
+	{
+		if (GetTickCount64() - pipe_timer > MARIO_PIPE_TIME)
+		{
+			isExitingPipe = false;
+		}
+		vy = -0.03f;
+		y += vy * dt;
+		return;
+	}
 
 	//Set Mario position after he come back from secret stage
 	if (CGame::GetInstance()->GetCurrentScene()->GetStageId() == 6)
@@ -135,12 +164,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (CGame::GetInstance()->GetIsFromSecretLevel() && CGame::GetInstance()->GetCurrentScene()->GetStageId() == 5)
 	{
-		this->SetPosition(2264 + 32, -110);
+		SetState(MARIO_STATE_PIPE_EXIT);
+		this->SetPosition(2324, 170);
 		CGame::GetInstance()->SetIsFromSecretLevel(false);
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	//DebugOut(L"[INFO] STATE: %d\n", state);
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -251,9 +280,12 @@ void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
-	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN))
+	if (CGame::GetInstance()->IsKeyDown(DIK_DOWN) || e->ny > 0)
 	{
-		CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+		SetState(MARIO_STATE_PIPE_ENTER);
+		isEnteringPipe = true;
+		pipe_timer = GetTickCount64();
+		pipe_scene_id = p->GetSceneId();
 		CGame::GetInstance()->SetSavedMarioLevel(this->GetLevel());
 	}
 }
@@ -568,7 +600,11 @@ int CMario::GetAniIdSmall()
 	int aniId = -1;
 	if (heldKoopa == nullptr)
 	{
-		if (!isOnPlatform)
+		if (isEnteringPipe || isExitingPipe)
+		{
+			aniId = ID_ANI_MARIO_SMALL_PIPE;
+		}
+		else if (!isOnPlatform)
 		{
 			if (abs(ax) == MARIO_ACCEL_RUN_X)
 			{
@@ -660,7 +696,11 @@ int CMario::GetAniIdBig()
 	int aniId = -1;
 	if (heldKoopa == nullptr)
 	{
-		if (!isOnPlatform)
+		if (isEnteringPipe || isExitingPipe)
+		{
+			aniId = ID_ANI_MARIO_PIPE;
+		}
+		else if (!isOnPlatform)
 		{
 			if (abs(ax) == MARIO_ACCEL_RUN_X)
 			{
@@ -751,7 +791,11 @@ int CMario::GetAniIdRaccoon()
 	int aniId = -1;
 	if (heldKoopa == nullptr)
 	{
-		if (!isOnPlatform)
+		if (isEnteringPipe || isExitingPipe)
+		{
+			aniId = ID_ANI_MARIO_RACCOON_PIPE;
+		}
+		else if (!isOnPlatform)
 		{
 			if (isFlying)
 			{
@@ -1082,6 +1126,14 @@ void CMario::SetState(int state)
 			CreateSubObject = true;
 			//DebugOut(L"[INFO] TAIL ATTACK BEGIN: %llu\n", tailAttack_start);// Start the tail attack timer
 		}
+		break;
+	case MARIO_STATE_PIPE_ENTER:
+		pipe_timer = GetTickCount64();
+		isEnteringPipe = true;
+		break;
+	case MARIO_STATE_PIPE_EXIT:
+		pipe_timer = GetTickCount64();
+		isExitingPipe = true;
 		break;
 	}
 
