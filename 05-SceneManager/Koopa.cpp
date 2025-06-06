@@ -148,6 +148,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		y += vy * dt;
 		x += vx * dt;
+		vy += ay * dt;
 		if (GetTickCount64() - die_start > KOOPA_DIE_FROM_ATTACK_TIMEOUT)
 		{
 			isDeleted = true;
