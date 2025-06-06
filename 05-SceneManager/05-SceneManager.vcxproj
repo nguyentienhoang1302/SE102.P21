@@ -156,6 +156,7 @@
     <ClCompile Include="DarkZone.cpp" />
     <ClCompile Include="Debris.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fireball.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="DarkZone.h" />
     <ClInclude Include="Debris.h" />
     <ClInclude Include="debug.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fireball.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

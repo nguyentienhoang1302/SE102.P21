@@ -3,16 +3,15 @@
 #include "PlayScene.h"
 #include "Point.h"
 
-CGoomba::CGoomba(float x, float y, int type):CGameObject(x, y)
+CGoomba::CGoomba(float x, float y, int type):CEnemy()
 {
 	this->type = type;
-	this->ax = 0;
-	this->ay = GOOMBA_GRAVITY;
-	die_start = -1;
-	walk_start = -1;
+	this->x = x;
+	this->y = y;
 	SetState(GOOMBA_STATE_WAITING);
-	this->start_x = x;
-	this->start_y = y;
+	SetStartPosition(x, y);
+	SetBoundingBoxSize(GOOMBA_BBOX_WIDTH, GOOMBA_BBOX_HEIGHT);
+	this->ay = GOOMBA_GRAVITY;
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -61,11 +60,16 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
+void CGoomba::OnActivated() {
+	lowjumpcount = 0;
+	if (type == 1)
+		SetState(GOOMBA_STATE_WALKING);
+	else
+		SetState(PARAGOOMBA_STATE_WALK);
+}
+
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
-
 	if (state == GOOMBA_STATE_DIE_FROM_ATTACK || state == PARAGOOMBA_STATE_DIE_FROM_ATTACK)
 	{
 		y += vy * dt;
@@ -113,80 +117,19 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	float cam_x, cam_y;
 	CGame::GetInstance()->GetCamPos(cam_x, cam_y);
+	UpdateActivation(cam_x, cam_y, 270, 287);
+	if (!IsVisible()) return;
 
-	float cam_width = 270;
-	float cam_height = 287;
-
-	float cam_center_x = cam_x + cam_width / 2;
-	float cam_center_y = cam_y + cam_height / 2;
-
-	//active zone
-	float active_left = start_x - 200;
-	float active_right = start_x + 200;
-	float active_top = start_y - 200;
-	float active_bottom = start_y + 200;
-
-	bool isCameraNearStart =
-		(cam_center_x >= active_left && cam_center_x <= active_right &&
-			cam_center_y >= active_top && cam_center_y <= active_bottom);
-
-	//is goomba in camera?
-	float cam_right = cam_x + cam_width;
-	float cam_bottom = cam_y + cam_height;
-	bool isInCamera = !(x + GOOMBA_BBOX_WIDTH / 2 < cam_x ||
-		x - GOOMBA_BBOX_WIDTH / 2 > cam_right ||
-		y + GOOMBA_BBOX_HEIGHT / 2 < cam_y ||
-		y - GOOMBA_BBOX_HEIGHT / 2 > cam_bottom);
-
-	if (!isCameraNearStart && !isInCamera) // camera too far
-	{
-		isActivated = false;
-		isOutOfRange = true;
-
-		this->x = start_x;
-		this->y = start_y;
-		SetState(GOOMBA_STATE_WAITING);
-		vx = 0;
-		vy = 0;
-		return;
-	}
-	else // camera is near
-	{
-		if (isOutOfRange && !isInCamera)
-		{
-			this->x = start_x;
-			this->y = start_y;
-			SetState(GOOMBA_STATE_WAITING);
-			vx = 0;
-			vy = 0;
-			isOutOfRange = false;
-			return;
-		}
-
-		isActivated = true;
-	}
-
-
-	if (state == GOOMBA_STATE_WAITING && isActivated)
-	{
-		lowjumpcount = 0;
-		if (type == 1)
-		{
-			SetState(GOOMBA_STATE_WALKING);
-		}
-		else if (type == 2)
-		{
-			SetState(PARAGOOMBA_STATE_WALK);
-		}
-	}
+	vy += ay * dt;
+	vx += ax * dt;
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
-
 void CGoomba::Render()
 {
+	if (!IsVisible()) return;
 	int aniId = -1;
 	if (state == PARAGOOMBA_STATE_WALK)
 	{

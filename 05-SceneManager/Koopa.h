@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "Enemy.h"
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
@@ -47,7 +47,7 @@
 #define ID_ANI_KOOPA_DIE_FROM_ATTACK 39991
 #define ID_ANI_KOOPA_RED_DIE_FROM_ATTACK 39992
 
-class CKoopa : public CGameObject
+class CKoopa : public CEnemy
 {
 protected:
 	float start_x;
@@ -73,6 +73,9 @@ protected:
 	bool IsOnPlatform(vector<LPGAMEOBJECT>* coObjects);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+
+	void OnActivated() override;
+	int GetWaitingState() override { return KOOPA_STATE_WAIT; }
 
 public:
 	CKoopa(float x, float y, int type); //1 - Koopa, 2 - ParaKoopa, 3 - Red Koopa

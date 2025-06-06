@@ -1,10 +1,10 @@
 #pragma once
-#include "GameObject.h"
+#include "Enemy.h"
 
 #define GOOMBA_GRAVITY 0.002f
 #define GOOMBA_WALKING_SPEED 0.05f
 #define GOOMBA_VY_JUMP 0.40f
-#define GOOMBA_VY_LOWJUMP 0.15f
+#define GOOMBA_VY_LOWJUMP 0.20f
 
 #define VX_DIE_FROM_ATTACK 0.05f
 #define VY_DIE_FROM_ATTACK 0.26f
@@ -37,7 +37,7 @@
 #define ID_ANI_GOOMBA_DIE_FROM_ATTACK 26000
 #define ID_ANI_PARAGOOMBA_DIE_FROM_ATTACK 27000
 
-class CGoomba : public CGameObject
+class CGoomba : public CEnemy
 {
 protected:
 	float start_x;
@@ -50,8 +50,8 @@ protected:
 	bool isActivated = false;
 	bool isOutOfRange = false;
 
-	ULONGLONG die_start;
-	ULONGLONG walk_start;
+	ULONGLONG die_start = -1;
+	ULONGLONG walk_start = -1;
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
@@ -62,6 +62,9 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+
+	void OnActivated() override;
+	int GetWaitingState() override { return GOOMBA_STATE_WAITING; }
 
 public: 	
 	CGoomba(float x, float y, int type); //1 - Goomba, 2 - Paragoomba

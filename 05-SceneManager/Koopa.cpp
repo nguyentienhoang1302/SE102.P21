@@ -7,12 +7,15 @@
 #include "Point.h"
 #include "HUDManager.h"
 
-CKoopa::CKoopa(float x, float y, int type) :CGameObject(x, y)
+CKoopa::CKoopa(float x, float y, int type) :CEnemy()
 {
 	this->type = type;
+	this->x = x; 
+	this->y = y;
+	SetStartPosition(x, y);
+	SetBoundingBoxSize(KOOPA_BBOX_WIDTH, KOOPA_BBOX_HEIGHT);
 	SetState(KOOPA_STATE_WAIT);
-	this->start_x = x;
-	this->start_y = y;
+	ay = KOOPA_GRAVITY;
 }
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -120,11 +123,27 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 }
 
+void CKoopa::OnActivated() {
+	this->ax = 0;
+	this->ay = KOOPA_GRAVITY;
+	walk_start = -1;
+	shell_start = -1;
+	if (type == 1)
+	{
+		SetState(KOOPA_STATE_WALK);
+	}
+	else if (type == 2)
+	{
+		SetState(PARAKOOPA_STATE_WALK);
+	}
+	else if (type == 3)
+	{
+		SetState(KOOPA_STATE_RED_WALK);
+	}
+}
+
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
-
 	if (state == KOOPA_STATE_DIE_FROM_ATTACK || state == KOOPA_STATE_RED_DIE_FROM_ATTACK)
 	{
 		y += vy * dt;
@@ -173,79 +192,11 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	float cam_x, cam_y;
 	CGame::GetInstance()->GetCamPos(cam_x, cam_y);
+	UpdateActivation(cam_x, cam_y, 270, 287);
+	//if (!IsVisible()) return;
 
-	float cam_width = 270;
-	float cam_height = 287;
-
-	float cam_center_x = cam_x + cam_width / 2;
-	float cam_center_y = cam_y + cam_height / 2;
-
-	//active zone
-	float active_left = start_x - 200;
-	float active_right = start_x + 200;
-	float active_top = start_y - 200;
-	float active_bottom = start_y + 200;
-
-	bool isCameraNearStart =
-		(cam_center_x >= active_left && cam_center_x <= active_right &&
-			cam_center_y >= active_top && cam_center_y <= active_bottom);
-
-	//is koopa in camera?
-	float cam_right = cam_x + cam_width;
-	float cam_bottom = cam_y + cam_height;
-	bool isInCamera = !(x + KOOPA_BBOX_WIDTH / 2 < cam_x ||
-		x - KOOPA_BBOX_WIDTH / 2 > cam_right ||
-		y + KOOPA_BBOX_HEIGHT / 2 < cam_y ||
-		y - KOOPA_BBOX_HEIGHT / 2 > cam_bottom);
-
-	if (!isCameraNearStart && !isInCamera) // camera too far
-	{
-		isActivated = false;
-		isOutOfRange = true;
-
-		this->x = start_x;
-		this->y = start_y;
-		SetState(KOOPA_STATE_WAIT);
-		vx = 0;
-		vy = 0;
-		return;
-	}
-	else // camera is near
-	{
-		if (isOutOfRange && !isInCamera)
-		{
-			this->x = start_x;
-			this->y = start_y;
-			SetState(KOOPA_STATE_WAIT);
-			vx = 0;
-			vy = 0;
-			isOutOfRange = false;
-			return;
-		}
-
-		isActivated = true;
-	}
-
-	if(state == KOOPA_STATE_WAIT && isActivated)
-	{
-		this->ax = 0;
-		this->ay = KOOPA_GRAVITY;
-		walk_start = -1;
-		shell_start = -1;
-		if (type == 1)
-		{
-			SetState(KOOPA_STATE_WALK);
-		}
-		else if (type == 2)
-		{
-			SetState(PARAKOOPA_STATE_WALK);
-		}
-		else if (type == 3)
-		{
-			SetState(KOOPA_STATE_RED_WALK);
-		}
-	}
-
+	vy += ay * dt;
+	vx += ax * dt;
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -253,6 +204,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopa::Render()
 {
+	if (!IsVisible()) return;
 	int aniId = -1;
 	if (state == PARAKOOPA_STATE_WALK)
 	{
@@ -403,7 +355,6 @@ void CKoopa::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	else
 		koopa->DieFromAttack(1);
 }
-
 
 void CKoopa::OnCollisionWithBrick(LPCOLLISIONEVENT e)
 {

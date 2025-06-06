@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "Enemy.h"
 
 #define PIRANHAPLANT_BBOX_WIDTH 16
 #define PIRANHAPLANT_BBOX_HEIGHT 24
@@ -32,7 +32,7 @@
 #define ID_ANI_PIRANHAPLANT_RED_BR_IDLE 137000
 #define ID_ANI_PIRANHAPLANT 139000
 
-class CPPlant : public CGameObject
+class CPPlant : public CEnemy
 {
 protected:
 	ULONGLONG timer;
@@ -53,6 +53,9 @@ protected:
 	virtual void Rise();
 	virtual void Fall();
 	virtual void Shoot();
+
+	void OnActivated() override;
+	int GetWaitingState() override { return FIREPIRANHAPLANT_STATE_WAIT; }
 
 public:
 	CPPlant(float x, float y, int type); //1 - Green Fire, 2 - Red Fire, 3 - Small

@@ -3,17 +3,22 @@
 #include "Fireball.h"
 #include "PlayScene.h"
 
-CPPlant::CPPlant(float x, float y, int type) :CGameObject(x, y)
+CPPlant::CPPlant(float x, float y, int type) :CEnemy()
 {
 	this->type = type;
+	this->x = x; 
+	this->y = y;
+	SetStartPosition(x, y);
 	if (type == 1)
 	{
+		SetBoundingBoxSize(FIREPIRANHAPLANT_BBOX_WIDTH, FIREPIRANHAPLANT_BBOX_HEIGHT_GREEN);
 		SetState(FIREPIRANHAPLANT_STATE_WAIT);
 		y0 = y + 6;
 		timer = 0;
 	}
 	else if (type == 2)
 	{
+		SetBoundingBoxSize(FIREPIRANHAPLANT_BBOX_WIDTH, FIREPIRANHAPLANT_BBOX_HEIGHT_RED);
 		SetState(FIREPIRANHAPLANT_STATE_WAIT);
 		y0 = y + 10;
 		timer = 0;
@@ -50,6 +55,12 @@ void CPPlant::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 }
 
+void CPPlant::OnActivated() {
+	SetState(FIREPIRANHAPLANT_STATE_TL);
+	timer = 0;
+	isStart = true;
+}
+
 void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (this->type == 3)
@@ -73,60 +84,8 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		float cam_x, cam_y;
 		CGame::GetInstance()->GetCamPos(cam_x, cam_y);
-
-		float cam_width = 270;
-		float cam_height = 287;
-
-		float cam_center_x = cam_x + cam_width / 2;
-		float cam_center_y = cam_y + cam_height / 2;
-
-		//active zone
-		float active_left = x - 200;
-		float active_right = x + 200;
-		float active_top = y - 200;
-		float active_bottom = y + 200;
-
-		bool isCameraNearStart =
-			(cam_center_x >= active_left && cam_center_x <= active_right &&
-				cam_center_y >= active_top && cam_center_y <= active_bottom);
-
-		//is in camera?
-		float cam_right = cam_x + cam_width;
-		float cam_bottom = cam_y + cam_height;
-		bool isInCamera = !(x + FIREPIRANHAPLANT_BBOX_WIDTH / 2 < cam_x ||
-			x - FIREPIRANHAPLANT_BBOX_WIDTH / 2 > cam_right ||
-			y + FIREPIRANHAPLANT_BBOX_HEIGHT_RED / 2 < cam_y ||
-			y - FIREPIRANHAPLANT_BBOX_HEIGHT_RED / 2 > cam_bottom);
-
-		if (!isCameraNearStart && !isInCamera) // camera too far
-		{
-			isActivated = false;
-			isOutOfRange = true;
-
-			SetState(FIREPIRANHAPLANT_STATE_WAIT);
-			vx = 0;
-			vy = 0;
-			return;
-		}
-		else // camera is near
-		{
-			if (isOutOfRange && !isInCamera)
-			{
-				SetState(FIREPIRANHAPLANT_STATE_WAIT);
-				vx = 0;
-				vy = 0;
-				isOutOfRange = false;
-				return;
-			}
-
-			isActivated = true;
-		}
-
-		if (state == FIREPIRANHAPLANT_STATE_WAIT && isActivated)
-		{
-			SetState(FIREPIRANHAPLANT_STATE_TL);
-			isStart = true;
-		}
+		UpdateActivation(cam_x, cam_y, 270, 287);
+		if (!IsVisible()) return;
 
 		if (isStart == true)
 		{
@@ -165,9 +124,9 @@ void CPPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
-
 void CPPlant::Render()
 {
+	if (!IsVisible()) return;
 	int aniId = -1;
 	if (this->type == 3)
 	{
@@ -287,6 +246,7 @@ void CPPlant::Rise()
 			vy = -0.02f;
 	}
 }
+
 void CPPlant::Fall()
 {
 	if (y > y0 + 5)
