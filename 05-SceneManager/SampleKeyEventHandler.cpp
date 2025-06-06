@@ -47,7 +47,7 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->RequestReload();
 		break;
 	case DIK_A:
-		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr)
+		if (mario->GetLevel() == MARIO_LEVEL_RACCOON && mario->GetState() != MARIO_STATE_TAIL_ATTACK && mario->heldKoopa == nullptr && mario->isSitting == false)
 		{
 			mario->SetState(MARIO_STATE_TAIL_ATTACK);
 			break;

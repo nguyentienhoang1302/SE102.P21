@@ -172,7 +172,6 @@
 
 class CMario : public CGameObject
 {
-	BOOLEAN isSitting;
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
@@ -204,6 +203,7 @@ class CMario : public CGameObject
 	int GetAniIdRaccoon();
 
 public:
+	BOOLEAN isSitting;
 	BOOLEAN isOnPlatform;
 	BOOLEAN isFlying = false;
 	BOOLEAN isHovering = false;
