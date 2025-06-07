@@ -1224,3 +1224,27 @@ void CMario::SetLevel(int l)
 	level = l;
 }
 
+void CMario::ShellPickUp()
+{
+	// Check for nearby Koopa shells to pick up
+	vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
+	for (size_t i = 0; i < objects->size(); i++)
+	{
+		CKoopa* koopa = dynamic_cast<CKoopa*>(objects->at(i));
+		if (koopa != nullptr && (koopa->GetState() == KOOPA_STATE_SHELL || koopa->GetState() == KOOPA_STATE_RED_SHELL))
+		{
+			float koopaX, koopaY;
+			CGame::GetInstance()->GetCurrentScene()->xMario = x;
+			CGame::GetInstance()->GetCurrentScene()->yMario = y;
+			koopa->GetPosition(koopaX, koopaY);
+
+			// Check if Koopa shell is close enough to Mario
+			if (abs(x - koopaX) < 16 && abs(y - koopaY) < 16)
+			{
+				heldKoopa = koopa; // Mario picks up the shell
+				SetState(MARIO_STATE_HOLD_SHELL);
+				break;
+			}
+		}
+	}
+}

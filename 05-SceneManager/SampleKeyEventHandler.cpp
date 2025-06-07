@@ -54,26 +54,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		}
 		if (mario->heldKoopa == nullptr)
 		{
-			// Check for nearby Koopa shells to pick up
-			vector<LPGAMEOBJECT>* objects = ((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetObjects();
-			for (size_t i = 0; i < objects->size(); i++)
-			{
-				CKoopa* koopa = dynamic_cast<CKoopa*>(objects->at(i));
-				if (koopa != nullptr && (koopa->GetState() == KOOPA_STATE_SHELL || koopa->GetState() == KOOPA_STATE_RED_SHELL))
-				{
-					float marioX, marioY, koopaX, koopaY;
-					mario->GetPosition(marioX, marioY);
-					koopa->GetPosition(koopaX, koopaY);
-
-					// Check if Koopa shell is close enough to Mario
-					if (abs(marioX - koopaX) < 16 && abs(marioY - koopaY) < 16)
-					{
-						mario->heldKoopa = koopa; // Mario picks up the shell
-						mario->SetState(MARIO_STATE_HOLD_SHELL);
-						break;
-					}
-				}
-			}
+			mario->ShellPickUp();
+			break;
 		}
 	}
 }

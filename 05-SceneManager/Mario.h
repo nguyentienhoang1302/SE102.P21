@@ -244,4 +244,6 @@ public:
 
 	float Getvy() { return vy; }
 	float Getvx() { return vx; }
+
+	void ShellPickUp();
 };
